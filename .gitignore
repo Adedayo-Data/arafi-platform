@@ -1,0 +1,58 @@
+# ====================================================================
+# ARAFI PLATFORM - GLOBAL MONOREPO GITIGNORE
+# ====================================================================
+
+# 1. Compiled Java & Build Outputs (Applies recursively to all sub-modules)
+**/target/
+**/build/
+**/out/
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+
+# 2. IDE Workspace Settings
+# Excludes local developer preferences while allowing code sharing
+.idea/
+*.iml
+*.ipr
+*.iws
+.eclipse/
+.classpath
+.project
+.settings/
+.factorypath
+.vscode/
+.sts4-cache/
+
+# 3. Build Tool Caches & Wrappers
+.gradle/
+.gradletasknamecache
+.m2/
+dependency-reduced-pom.xml
+*.flattened-pom.xml
+
+# 4. Local Environment Configurations & Secrets
+# NEVER commit database passwords, API tokens, or keys to source control
+.env
+*.env.local
+**/src/main/resources/application-local.properties
+**/src/main/resources/application-local.yml
+secrets.yml
+
+# 5. OS Specific/System Garbage
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.tmp
+*~
+hs_err_pid*
+replay_pid*
+
+# 6. Runtime Logs & Databases
+*.log
+**/logs/
+dump.rdb
+activemq-data/
