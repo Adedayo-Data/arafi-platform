@@ -1,14 +1,24 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import BackgroundShader from "../components/ui/BackgroundShader";
+import { useAuth } from "../context/AuthContext";
 
 export default function Signup() {
+  const { signup } = useAuth();
+  const navigate = useNavigate();
+
+  const [appName, setAppName] = useState("");
+  const [email, setEmail] = useState("");
   const [viewState, setViewState] = useState<"signup" | "key">("signup");
+  const [generatedKey, setGeneratedKey] = useState("");
   const [keyCopied, setKeyCopied] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
+    const key = signup(appName, email);
+    setGeneratedKey(key);
     setIsTransitioning(true);
     setTimeout(() => {
       setViewState("key");
@@ -17,17 +27,14 @@ export default function Signup() {
   };
 
   const handleCopy = () => {
-    // Simulate clipboard copy
-    // navigator.clipboard.writeText('rf_live_9x8B2mPqL5vW1nZ4kY7cR3tF0jH6gS2d');
+    navigator.clipboard.writeText(generatedKey).catch(() => {});
     setKeyCopied(true);
     setTimeout(() => setKeyCopied(false), 2000);
   };
 
   const handleContinue = () => {
-    if (!keyCopied && !isSubmitting) {
-      // We can only continue if they copied the key.
-    }
     setIsSubmitting(true);
+    setTimeout(() => navigate("/dashboard"), 600);
   };
 
   return (
@@ -40,7 +47,7 @@ export default function Signup() {
 
       {/* Main Container */}
       <div className="w-full h-full flex flex-col lg:flex-row relative">
-        {/* Left: Value Prop / Visualization */}
+        {/* Left: Value Prop */}
         <div className="hidden lg:flex flex-1 flex-col justify-center gap-8 animate-fade-scale p-12 lg:p-24 max-w-4xl">
           <a
             className="font-headline-md text-headline-md font-bold text-on-surface flex items-center gap-2 mb-4"
@@ -74,13 +81,11 @@ export default function Signup() {
               <div className="p-5 font-code-sm text-[13px] leading-relaxed text-secondary-fixed/80 overflow-x-auto">
                 <pre>
                   <code>
-                    {`curl https://api.arafi.com/v1/auth \\
-  -H `}
+                    {`curl https://api.arafi.com/v1/auth \\\n  -H `}
                     <span className="text-tertiary">
                       "Authorization: Bearer sk_live_..."
                     </span>
-                    {` \\
-  -d `}
+                    {` \\\n  -d `}
                     <span className="text-tertiary">
                       {`'{ "app_name": "Production" }'`}
                     </span>
@@ -101,7 +106,6 @@ export default function Signup() {
             className="glass-card w-full h-full p-8 md:p-12 flex flex-col justify-center gap-8 shadow-2xl relative"
             id="app-card"
           >
-            {/* Subtle card inner glow */}
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 blur-[60px] rounded-full pointer-events-none"></div>
 
             {/* State 1: Sign Up Form */}
@@ -140,6 +144,8 @@ export default function Signup() {
                       placeholder="e.g. Production Cluster"
                       required
                       type="text"
+                      value={appName}
+                      onChange={(e) => setAppName(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-2.5">
@@ -155,6 +161,8 @@ export default function Signup() {
                       placeholder="dev@company.com"
                       required
                       type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                   <button
@@ -221,7 +229,7 @@ export default function Signup() {
                   </label>
                   <div className="bg-surface-container-lowest/80 border border-white/10 rounded-lg flex items-center justify-between p-1.5 pl-4 group hover:border-white/20 transition-colors">
                     <code className="font-code-sm text-code-sm text-primary-fixed truncate pr-2 select-all">
-                      rf_live_9x8B2mPqL5vW1nZ4kY7cR3tF0jH6gS2d
+                      {generatedKey}
                     </code>
                     <button
                       className={`h-10 w-10 flex items-center justify-center rounded-md transition-colors ${
@@ -241,7 +249,7 @@ export default function Signup() {
                 </div>
 
                 <button
-                  className={`mt-4 w-full font-label-mono text-label-mono py-4 px-4 rounded-lg transition-all duration-300 ${
+                  className={`mt-4 w-full font-label-mono text-label-mono py-4 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 ${
                     !keyCopied && !isSubmitting
                       ? "bg-white/5 border border-white/10 text-on-surface/40 cursor-not-allowed"
                       : "bg-inverse-primary text-on-primary border-t border-white/20 glow-button shadow-xl shadow-indigo-500/20 hover:scale-[1.02]"

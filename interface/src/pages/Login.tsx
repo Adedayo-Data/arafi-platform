@@ -1,36 +1,29 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import BackgroundShader from "../components/ui/BackgroundShader";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
-  const [viewState, setViewState] = useState<"form" | "success">("form");
+  const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [error, setError] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || !password) return;
 
     setIsSubmitting(true);
+    setError("");
 
-    // Simulate API Call & Transition
+    // Simulate a brief API call then log in
     setTimeout(() => {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setViewState("success");
-        setIsSubmitting(false);
-        setIsTransitioning(false);
-      }, 300);
-    }, 1200);
-  };
-
-  const resetForm = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setViewState("form");
-      setEmail("");
-      setIsTransitioning(false);
-    }, 300);
+      login(email);
+      navigate("/dashboard");
+    }, 1000);
   };
 
   return (
@@ -43,7 +36,7 @@ export default function Login() {
 
       {/* Main Container */}
       <div className="w-full h-full flex flex-col lg:flex-row relative">
-        {/* Left: Value Prop / Visualization */}
+        {/* Left: Value Prop */}
         <div className="hidden lg:flex flex-1 flex-col justify-center gap-8 animate-fade-scale p-12 lg:p-24 max-w-4xl">
           <a
             className="font-headline-md text-headline-md font-bold text-on-surface flex items-center gap-2 mb-4"
@@ -77,13 +70,11 @@ export default function Login() {
               <div className="p-5 font-code-sm text-[13px] leading-relaxed text-secondary-fixed/80 overflow-x-auto">
                 <pre>
                   <code>
-                    {`curl https://api.arafi.com/v1/auth \\
-  -H `}
+                    {`curl https://api.arafi.com/v1/auth \\\n  -H `}
                     <span className="text-tertiary">
                       "Authorization: Bearer sk_live_..."
                     </span>
-                    {` \\
-  -d `}
+                    {` \\\n  -d `}
                     <span className="text-tertiary">
                       {`'{ "app_name": "Production" }'`}
                     </span>
@@ -104,24 +95,16 @@ export default function Login() {
             className="glass-card w-full h-full p-8 md:p-12 flex flex-col justify-center shadow-2xl relative"
             id="app-card"
           >
-            {/* Subtle card inner glow */}
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 blur-[60px] rounded-full pointer-events-none"></div>
 
             <div className="relative w-full flex-1 flex flex-col justify-center">
-              {/* View 1: Login Form */}
-              <div
-                className={`flex flex-col gap-8 w-full transition-all duration-300 relative z-10 ${
-                  viewState === "form" && !isTransitioning
-                    ? "opacity-100"
-                    : "opacity-0 pointer-events-none absolute"
-                }`}
-              >
+              <div className="flex flex-col gap-8 w-full">
                 <header className="flex flex-col gap-3">
                   <h2 className="font-headline-lg text-3xl tracking-tight text-on-surface">
                     Log in to Arafi
                   </h2>
                   <p className="font-body-md text-on-surface/50">
-                    Enter your email to receive a secure login link.
+                    Enter your credentials to access your dashboard.
                   </p>
                 </header>
 
@@ -146,6 +129,32 @@ export default function Login() {
                     />
                   </div>
 
+                  <div className="flex flex-col gap-2.5">
+                    <label
+                      className="font-label-mono text-label-mono text-on-surface/80"
+                      htmlFor="password"
+                    >
+                      Password
+                    </label>
+                    <input
+                      className="bg-surface-container-lowest/50 border border-white/10 rounded-lg p-3.5 font-body-md text-body-md text-on-surface custom-input placeholder:text-on-surface-variant/40"
+                      id="password"
+                      name="password"
+                      placeholder="••••••••••••"
+                      required
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  {error && (
+                    <p className="text-error font-label-mono text-[12px]">
+                      {error}
+                    </p>
+                  )}
+
                   <button
                     className={`mt-4 w-full glow-button bg-inverse-primary text-on-primary font-label-mono text-label-mono py-4 px-4 rounded-lg transition-all duration-300 border-t border-white/20 shadow-xl shadow-indigo-500/20 flex justify-center items-center gap-2 relative overflow-hidden group ${
                       isSubmitting
@@ -156,7 +165,7 @@ export default function Login() {
                     disabled={isSubmitting}
                   >
                     <span className="relative z-10">
-                      {isSubmitting ? "Sending..." : "Send login link"}
+                      {isSubmitting ? "Logging in..." : "Log in"}
                     </span>
                     {isSubmitting && (
                       <span className="material-symbols-outlined text-[18px] animate-spin-custom relative z-10">
@@ -177,49 +186,6 @@ export default function Login() {
                     </a>
                   </p>
                 </div>
-              </div>
-
-              {/* View 2: Success State */}
-              <div
-                className={`flex flex-col items-center justify-center transition-all duration-300 absolute inset-0 ${
-                  viewState === "success" && !isTransitioning
-                    ? "opacity-100"
-                    : "opacity-0 pointer-events-none"
-                }`}
-              >
-                <div
-                  className={`w-16 h-16 rounded-full bg-secondary-fixed/10 border border-white/10 flex items-center justify-center mb-6 shadow-lg backdrop-blur-sm ${
-                    viewState === "success" && !isTransitioning
-                      ? "animate-bounce-check"
-                      : "opacity-0"
-                  }`}
-                >
-                  <span
-                    className="material-symbols-outlined text-primary text-[32px]"
-                    style={{ fontVariationSettings: "'FILL' 1" }}
-                  >
-                    check_circle
-                  </span>
-                </div>
-                <h2 className="font-headline-md text-headline-md text-on-surface mb-3 text-center">
-                  Check your email
-                </h2>
-                <p className="font-body-md text-body-md text-on-surface/60 text-center max-w-70">
-                  We sent a secure magic link to <br />
-                  <span className="text-on-surface font-medium mt-1 inline-block">
-                    {email}
-                  </span>
-                </p>
-                <button
-                  className="mt-8 font-label-mono text-label-mono text-on-surface/60 hover:text-on-surface transition-colors flex items-center gap-1"
-                  onClick={resetForm}
-                  type="button"
-                >
-                  <span className="material-symbols-outlined text-[16px]">
-                    arrow_back
-                  </span>
-                  Back to login
-                </button>
               </div>
             </div>
           </main>

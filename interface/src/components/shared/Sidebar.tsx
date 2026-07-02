@@ -1,8 +1,16 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const Sidebar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   const navItems = [
     {
@@ -49,14 +57,14 @@ const Sidebar = () => {
     <nav className="hidden md:flex flex-col h-full p-4 gap-2 bg-surface-container-low dark:bg-surface-container-low fixed left-0 top-0 w-64 border-r border-outline-variant dark:border-outline-variant z-40">
       <div className="mb-8 px-2 flex items-center gap-3">
         <div className="w-8 h-8 rounded bg-primary flex items-center justify-center font-bold text-on-primary font-headline-md">
-          A
+          {user?.email?.[0]?.toUpperCase() ?? "A"}
         </div>
-        <div>
+        <div className="overflow-hidden">
           <h1 className="font-headline-md text-headline-md font-bold text-primary">
             Arafi Dev
           </h1>
-          <p className="font-label-mono text-label-mono text-on-surface-variant text-[10px]">
-            Production Environment
+          <p className="font-label-mono text-label-mono text-on-surface-variant text-[10px] truncate">
+            {user?.email ?? "Production Environment"}
           </p>
         </div>
       </div>
@@ -104,6 +112,13 @@ const Sidebar = () => {
           <span className="material-symbols-outlined text-[18px]">help</span>
           <span className="font-label-mono text-label-mono">Support</span>
         </a>
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-2 text-error hover:bg-error/10 transition-colors rounded-lg mt-2"
+        >
+          <span className="material-symbols-outlined text-[18px]">logout</span>
+          <span className="font-label-mono text-label-mono">Log out</span>
+        </button>
       </div>
     </nav>
   );

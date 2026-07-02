@@ -3,8 +3,12 @@ import ApiKeyDisplay from "../components/dashboard/ApiKeyDisplay";
 import StatCard from "../components/ui/StatCard";
 import EscrowTable from "../components/dashboard/EscrowTable";
 import WebhookTable from "../components/ui/WebhookTable";
+import { useAuth } from "../context/AuthContext";
 
 export default function Dashboard() {
+  const { user } = useAuth();
+  const apiKey = user?.apiKey ?? "sk_live_xxxxxxxxxxxxxxxx";
+  const maskedKey = apiKey.slice(0, 12) + "••••••" + apiKey.slice(-4);
   return (
     <DashboardLayout>
       {/* Header Row */}
@@ -31,8 +35,8 @@ export default function Dashboard() {
         </div>
 
         <ApiKeyDisplay
-          apiKey="arafi_test_8f92b3f2a1100"
-          maskedKey="arafi_test_••••••3f2a"
+          apiKey={apiKey}
+          maskedKey={maskedKey}
         />
       </header>
 
