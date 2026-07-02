@@ -4,7 +4,6 @@ import EndpointButton from "../components/ui/EndpointButton";
 
 export default function Logs() {
   const [activeEndpoint, setActiveEndpoint] = useState("/v1/transactions");
-  const [isSending, setIsSending] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
   const [animating, setAnimating] = useState(false);
 

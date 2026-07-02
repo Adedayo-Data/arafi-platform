@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import Sidebar from "../shared/Sidebar";
 import Foot2 from "../shared/Foot2";
 

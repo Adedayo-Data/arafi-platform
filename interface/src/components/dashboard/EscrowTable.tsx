@@ -1,4 +1,4 @@
-import { useState, MouseEvent } from "react";
+import { useState, type MouseEvent } from "react";
 
 export default function EscrowTable() {
   const [rowFlashed, setRowFlashed] = useState(false);
