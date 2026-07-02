@@ -42,13 +42,13 @@ const Navbar = () => {
         <div className="flex items-center gap-6">
           <a
             className="font-label-mono text-label-mono text-on-surface/60 hover:text-on-surface transition-colors hidden md:block"
-            href="#"
+            href="/login"
           >
             Log In
           </a>
           <a
             className="font-label-mono text-label-mono bg-inverse-primary text-on-primary px-5 py-2.5 rounded-DEFAULT shadow-2xl shadow-primary/20 hover:scale-[1.02] transition-transform border-t border-white/20"
-            href="#"
+            href="/signup"
           >
             Get Started
           </a>
