@@ -38,8 +38,8 @@ export default function Login() {
       <BackgroundShader />
 
       {/* Background Glows */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 blur-[120px] -z-10 rounded-full pointer-events-none"></div>
-      <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-tertiary/5 blur-[100px] -z-10 rounded-full pointer-events-none"></div>
+      <div className="absolute top-0 left-1/4 w-125 h-125 bg-primary/10 blur-[120px] -z-10 rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-0 right-1/4 w-100 h-100 bg-tertiary/5 blur-[100px] -z-10 rounded-full pointer-events-none"></div>
 
       {/* Main Container */}
       <div className="w-full h-full flex flex-col lg:flex-row relative">
@@ -62,7 +62,7 @@ export default function Login() {
             define your orchestration rules.
           </p>
           <div className="relative group mt-4 max-w-2xl">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-transparent blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+            <div className="absolute -inset-4 bg-linear-to-tr from-primary/20 to-transparent blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
             <div className="relative rounded-2xl overflow-hidden border border-white/10 backdrop-blur-3xl bg-white/5 shadow-2xl">
               <div className="flex items-center px-4 py-2.5 bg-white/5 border-b border-white/10 gap-2">
                 <div className="flex gap-1.5">
@@ -204,7 +204,7 @@ export default function Login() {
                 <h2 className="font-headline-md text-headline-md text-on-surface mb-3 text-center">
                   Check your email
                 </h2>
-                <p className="font-body-md text-body-md text-on-surface/60 text-center max-w-[280px]">
+                <p className="font-body-md text-body-md text-on-surface/60 text-center max-w-70">
                   We sent a secure magic link to <br />
                   <span className="text-on-surface font-medium mt-1 inline-block">
                     {email}
