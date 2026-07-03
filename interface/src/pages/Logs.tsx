@@ -34,7 +34,7 @@ export default function Logs() {
               search
             </span>
             <input
-              className="bg-[#0D1220] border-tech rounded-lg pl-10 pr-4 py-1.5 text-sm font-label-mono text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 w-64"
+              className="bg-surface-container-low border-tech rounded-lg pl-10 pr-4 py-1.5 text-sm font-label-mono text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 w-64"
               placeholder="Search endpoints..."
               type="text"
             />
@@ -91,12 +91,12 @@ export default function Logs() {
         </div>
 
         {/* Request/Response Panel */}
-        <div className="flex-1 flex flex-col overflow-hidden bg-[#0B0F19] relative">
+        <div className="flex-1 flex flex-col overflow-hidden bg-background relative">
           <div className={`h-full flex flex-col ${animating ? "slide-in" : ""}`}>
             {/* Request Builder */}
             <div className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-6">
               <div className="flex flex-col md:flex-row items-center gap-4">
-                <div className="flex items-center bg-[#0D1220] border-tech rounded-lg overflow-hidden w-full md:max-w-2xl">
+                <div className="flex items-center bg-surface-container-low border-tech rounded-lg overflow-hidden w-full md:max-w-2xl">
                   <div className="bg-surface-container-highest px-3 py-2 font-label-mono text-label-mono text-secondary-fixed border-r border-tech">
                     GET
                   </div>
@@ -117,7 +117,7 @@ export default function Logs() {
 
               {/* Headers/Params Tabs */}
               <div className="border border-tech rounded-xl bg-surface-container-lowest overflow-hidden flex flex-col">
-                <div className="flex border-b border-tech bg-[#0D1220] overflow-x-auto">
+                <div className="flex border-b border-tech bg-surface-container-low overflow-x-auto">
                   <button className="px-4 py-2 font-label-mono text-label-mono text-primary border-b-2 border-primary whitespace-nowrap">
                     Headers (2)
                   </button>
@@ -128,7 +128,7 @@ export default function Logs() {
                     Body
                   </button>
                 </div>
-                <div className="p-4 bg-[#0B0F19] overflow-x-auto">
+                <div className="p-4 bg-background overflow-x-auto">
                   <table className="w-full text-left border-collapse min-w-[400px]">
                     <thead>
                       <tr className="border-b border-tech">
@@ -164,7 +164,7 @@ export default function Logs() {
             </div>
 
             {/* Response Area */}
-            <div className="h-1/2 md:h-1/2 border-t border-tech bg-[#0D1220] flex flex-col">
+            <div className="h-1/2 md:h-1/2 border-t border-tech bg-surface-container-low flex flex-col">
               <div className="flex items-center justify-between px-4 py-2 border-b border-tech bg-surface-container-lowest">
                 <div className="flex items-center gap-4">
                   <span className="font-label-mono text-label-mono text-on-surface">

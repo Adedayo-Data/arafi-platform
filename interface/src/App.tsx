@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
@@ -9,7 +10,37 @@ import EmptyDashboard from "./pages/EmptyDashboard";
 import Logs from "./pages/Logs";
 import ApiKeys from "./pages/ApiKeys";
 
+import { useTheme } from "./store/useTheme";
+
 function App() {
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    const root = document.documentElement;
+    
+    const applyTheme = (currentTheme: 'light' | 'dark' | 'system') => {
+      if (currentTheme === 'dark') {
+        root.classList.add('dark');
+        root.classList.remove('light');
+      } else if (currentTheme === 'light') {
+        root.classList.add('light');
+        root.classList.remove('dark');
+      } else {
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        root.classList.add(systemTheme);
+        root.classList.remove(systemTheme === 'dark' ? 'light' : 'dark');
+      }
+    };
+
+    applyTheme(theme);
+
+    if (theme === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = () => applyTheme('system');
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+  }, [theme]);
   return (
     <AuthProvider>
       <Router>

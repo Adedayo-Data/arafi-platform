@@ -56,12 +56,12 @@ export default function Login() {
           </p>
           <div className="relative group mt-4 max-w-2xl">
             <div className="absolute -inset-4 bg-linear-to-tr from-primary/20 to-transparent blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
-            <div className="relative rounded-2xl overflow-hidden border border-white/10 backdrop-blur-3xl bg-white/5 shadow-2xl">
-              <div className="flex items-center px-4 py-2.5 bg-white/5 border-b border-white/10 gap-2">
+            <div className="relative rounded-2xl overflow-hidden border border-on-surface/10 backdrop-blur-3xl bg-on-surface/5 shadow-2xl">
+              <div className="flex items-center px-4 py-2.5 bg-on-surface/5 border-b border-on-surface/10 gap-2">
                 <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-on-surface/10"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-on-surface/10"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-on-surface/10"></div>
                 </div>
                 <span className="ml-2 font-code-sm text-[11px] text-on-surface/40 uppercase tracking-widest">
                   auth_flow.sh
@@ -117,7 +117,7 @@ export default function Login() {
                       Email
                     </label>
                     <input
-                      className="bg-surface-container-lowest/50 border border-white/10 rounded-lg p-3.5 font-body-md text-body-md text-on-surface custom-input placeholder:text-on-surface-variant/40"
+                      className="bg-surface-container-lowest/50 border border-on-surface/10 rounded-lg p-3.5 font-body-md text-body-md text-on-surface custom-input placeholder:text-on-surface-variant/40"
                       id="email"
                       name="email"
                       placeholder="name@company.com"
@@ -137,7 +137,7 @@ export default function Login() {
                       Password
                     </label>
                     <input
-                      className="bg-surface-container-lowest/50 border border-white/10 rounded-lg p-3.5 font-body-md text-body-md text-on-surface custom-input placeholder:text-on-surface-variant/40"
+                      className="bg-surface-container-lowest/50 border border-on-surface/10 rounded-lg p-3.5 font-body-md text-body-md text-on-surface custom-input placeholder:text-on-surface-variant/40"
                       id="password"
                       name="password"
                       placeholder="••••••••••••"
@@ -156,7 +156,7 @@ export default function Login() {
                   )}
 
                   <button
-                    className={`mt-4 w-full glow-button bg-inverse-primary text-on-primary font-label-mono text-label-mono py-4 px-4 rounded-lg transition-all duration-300 border-t border-white/20 shadow-xl shadow-indigo-500/20 flex justify-center items-center gap-2 relative overflow-hidden group ${
+                    className={`mt-4 w-full glow-button bg-inverse-primary text-on-primary font-label-mono text-label-mono py-4 px-4 rounded-lg transition-all duration-300 border-t border-on-surface/20 shadow-xl shadow-indigo-500/20 flex justify-center items-center gap-2 relative overflow-hidden group ${
                       isSubmitting
                         ? "opacity-80 cursor-not-allowed"
                         : "hover:scale-[1.02]"
@@ -175,7 +175,7 @@ export default function Login() {
                   </button>
                 </form>
 
-                <div className="flex justify-center pt-2 border-t border-white/10">
+                <div className="flex justify-center pt-2 border-t border-on-surface/10">
                   <p className="font-body-md text-body-md text-on-surface/60">
                     Don't have an account?
                     <a

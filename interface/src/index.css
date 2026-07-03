@@ -1,53 +1,53 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-fixed-dim: #c0c1ff;
-  --color-on-error-container: #ffdad6;
-  --color-tertiary-container: #d97721;
-  --color-surface-container: #1f1f27;
-  --color-surface-dim: #13131b;
-  --color-on-primary-container: #0d0096;
-  --color-surface-container-highest: #34343d;
-  --color-on-secondary-fixed-variant: #39485a;
-  --color-secondary: #b9c8de;
-  --color-inverse-surface: #e4e1ed;
-  --color-on-secondary-container: #a7b6cc;
-  --color-secondary-container: #39485a;
-  --color-surface-tint: #c0c1ff;
-  --color-inverse-primary: #494bd6;
-  --color-inverse-on-surface: #303038;
-  --color-surface-container-high: #292932;
-  --color-tertiary: #ffb783;
-  --color-surface-container-lowest: #0d0d15;
-  --color-primary-fixed: #e1e0ff;
-  --color-on-tertiary-fixed: #301400;
-  --color-outline: #908fa0;
-  --color-on-primary: #1000a9;
-  --color-on-tertiary-container: #452000;
-  --color-on-primary-fixed: #07006c;
-  --color-background: #13131b;
-  --color-surface-container-low: #1b1b23;
-  --color-on-error: #690005;
-  --color-on-surface-variant: #c7c4d7;
-  --color-on-secondary: #233143;
-  --color-primary-container: #8083ff;
-  --color-outline-variant: #464554;
-  --color-on-tertiary: #4f2500;
-  --color-on-secondary-fixed: #0d1c2d;
-  --color-primary: #c0c1ff;
-  --color-on-surface: #e4e1ed;
-  --color-on-tertiary-fixed-variant: #703700;
-  --color-error: #ffb4ab;
-  --color-surface-bright: #393841;
-  --color-on-primary-fixed-variant: #2f2ebe;
-  --color-error-container: #93000a;
-  --color-tertiary-fixed: #ffdcc5;
-  --color-secondary-fixed: #d4e4fa;
-  --color-tertiary-fixed-dim: #ffb783;
-  --color-on-background: #e4e1ed;
-  --color-surface-variant: #34343d;
-  --color-secondary-fixed-dim: #b9c8de;
-  --color-surface: #13131b;
+  --color-primary-fixed-dim: var(--app-primary-fixed-dim);
+  --color-on-error-container: var(--app-on-error-container);
+  --color-tertiary-container: var(--app-tertiary-container);
+  --color-surface-container: var(--app-surface-container);
+  --color-surface-dim: var(--app-surface-dim);
+  --color-on-primary-container: var(--app-on-primary-container);
+  --color-surface-container-highest: var(--app-surface-container-highest);
+  --color-on-secondary-fixed-variant: var(--app-on-secondary-fixed-variant);
+  --color-secondary: var(--app-secondary);
+  --color-inverse-surface: var(--app-inverse-surface);
+  --color-on-secondary-container: var(--app-on-secondary-container);
+  --color-secondary-container: var(--app-secondary-container);
+  --color-surface-tint: var(--app-surface-tint);
+  --color-inverse-primary: var(--app-inverse-primary);
+  --color-inverse-on-surface: var(--app-inverse-on-surface);
+  --color-surface-container-high: var(--app-surface-container-high);
+  --color-tertiary: var(--app-tertiary);
+  --color-surface-container-lowest: var(--app-surface-container-lowest);
+  --color-primary-fixed: var(--app-primary-fixed);
+  --color-on-tertiary-fixed: var(--app-on-tertiary-fixed);
+  --color-outline: var(--app-outline);
+  --color-on-primary: var(--app-on-primary);
+  --color-on-tertiary-container: var(--app-on-tertiary-container);
+  --color-on-primary-fixed: var(--app-on-primary-fixed);
+  --color-background: var(--app-background);
+  --color-surface-container-low: var(--app-surface-container-low);
+  --color-on-error: var(--app-on-error);
+  --color-on-surface-variant: var(--app-on-surface-variant);
+  --color-on-secondary: var(--app-on-secondary);
+  --color-primary-container: var(--app-primary-container);
+  --color-outline-variant: var(--app-outline-variant);
+  --color-on-tertiary: var(--app-on-tertiary);
+  --color-on-secondary-fixed: var(--app-on-secondary-fixed);
+  --color-primary: var(--app-primary);
+  --color-on-surface: var(--app-on-surface);
+  --color-on-tertiary-fixed-variant: var(--app-on-tertiary-fixed-variant);
+  --color-error: var(--app-error);
+  --color-surface-bright: var(--app-surface-bright);
+  --color-on-primary-fixed-variant: var(--app-on-primary-fixed-variant);
+  --color-error-container: var(--app-error-container);
+  --color-tertiary-fixed: var(--app-tertiary-fixed);
+  --color-secondary-fixed: var(--app-secondary-fixed);
+  --color-tertiary-fixed-dim: var(--app-tertiary-fixed-dim);
+  --color-on-background: var(--app-on-background);
+  --color-surface-variant: var(--app-surface-variant);
+  --color-secondary-fixed-dim: var(--app-secondary-fixed-dim);
+  --color-surface: var(--app-surface);
 
   --radius-DEFAULT: 0.125rem;
   --radius-lg: 0.25rem;
@@ -106,8 +106,108 @@
 }
 
 @layer base {
+  :root {
+    --app-primary-fixed-dim: #c0c1ff;
+    --app-on-error-container: #7f1d1d;
+    --app-tertiary-container: #fed7aa;
+    --app-surface-container: #f8fafc;
+    --app-surface-dim: #f8fafc;
+    --app-on-primary-container: #312e81;
+    --app-surface-container-highest: #cbd5e1;
+    --app-on-secondary-fixed-variant: #39485a;
+    --app-secondary: #64748b;
+    --app-inverse-surface: #1e293b;
+    --app-on-secondary-container: #1e293b;
+    --app-secondary-container: #f1f5f9;
+    --app-surface-tint: #4f46e5;
+    --app-inverse-primary: #4f46e5;
+    --app-inverse-on-surface: #f8fafc;
+    --app-surface-container-high: #e2e8f0;
+    --app-tertiary: #d97721;
+    --app-surface-container-lowest: #ffffff;
+    --app-primary-fixed: #e1e0ff;
+    --app-on-tertiary-fixed: #301400;
+    --app-outline: #94a3b8;
+    --app-on-primary: #ffffff;
+    --app-on-tertiary-container: #7c2d12;
+    --app-on-primary-fixed: #07006c;
+    --app-background: #f8fafc;
+    --app-surface-container-low: #f1f5f9;
+    --app-on-error: #ffffff;
+    --app-on-surface-variant: #334155;
+    --app-on-secondary: #ffffff;
+    --app-primary-container: #e0e7ff;
+    --app-outline-variant: #cbd5e1;
+    --app-on-tertiary: #ffffff;
+    --app-on-secondary-fixed: #0d1c2d;
+    --app-primary: #4f46e5;
+    --app-on-surface: #0f172a;
+    --app-on-tertiary-fixed-variant: #703700;
+    --app-error: #ef4444;
+    --app-surface-bright: #ffffff;
+    --app-on-primary-fixed-variant: #2f2ebe;
+    --app-error-container: #fee2e2;
+    --app-tertiary-fixed: #ffdcc5;
+    --app-secondary-fixed: #d4e4fa;
+    --app-tertiary-fixed-dim: #ffb783;
+    --app-on-background: #0f172a;
+    --app-surface-variant: #f1f5f9;
+    --app-secondary-fixed-dim: #b9c8de;
+    --app-surface: #ffffff;
+  }
+
+  :root.dark {
+    --app-primary-fixed-dim: #c0c1ff;
+    --app-on-error-container: #ffdad6;
+    --app-tertiary-container: #d97721;
+    --app-surface-container: #1f1f27;
+    --app-surface-dim: #13131b;
+    --app-on-primary-container: #0d0096;
+    --app-surface-container-highest: #34343d;
+    --app-on-secondary-fixed-variant: #39485a;
+    --app-secondary: #b9c8de;
+    --app-inverse-surface: #e4e1ed;
+    --app-on-secondary-container: #a7b6cc;
+    --app-secondary-container: #39485a;
+    --app-surface-tint: #c0c1ff;
+    --app-inverse-primary: #494bd6;
+    --app-inverse-on-surface: #303038;
+    --app-surface-container-high: #292932;
+    --app-tertiary: #ffb783;
+    --app-surface-container-lowest: #0d0d15;
+    --app-primary-fixed: #e1e0ff;
+    --app-on-tertiary-fixed: #301400;
+    --app-outline: #908fa0;
+    --app-on-primary: #1000a9;
+    --app-on-tertiary-container: #452000;
+    --app-on-primary-fixed: #07006c;
+    --app-background: #13131b;
+    --app-surface-container-low: #1b1b23;
+    --app-on-error: #690005;
+    --app-on-surface-variant: #c7c4d7;
+    --app-on-secondary: #233143;
+    --app-primary-container: #8083ff;
+    --app-outline-variant: #464554;
+    --app-on-tertiary: #4f2500;
+    --app-on-secondary-fixed: #0d1c2d;
+    --app-primary: #c0c1ff;
+    --app-on-surface: #e4e1ed;
+    --app-on-tertiary-fixed-variant: #703700;
+    --app-error: #ffb4ab;
+    --app-surface-bright: #393841;
+    --app-on-primary-fixed-variant: #2f2ebe;
+    --app-error-container: #93000a;
+    --app-tertiary-fixed: #ffdcc5;
+    --app-secondary-fixed: #d4e4fa;
+    --app-tertiary-fixed-dim: #ffb783;
+    --app-on-background: #e4e1ed;
+    --app-surface-variant: #34343d;
+    --app-secondary-fixed-dim: #b9c8de;
+    --app-surface: #13131b;
+  }
+
   body { 
-    background-color: #0d0d15; 
+    background-color: var(--app-background); 
     overflow-x: hidden; 
   }
 }
@@ -223,14 +323,14 @@
   }
 
   .surface-panel {
-    background-color: #131826;
-    border: 1px solid theme('colors.outline-variant');
+    background-color: var(--app-surface-container);
+    border: 1px solid var(--app-outline-variant);
   }
   .surface-panel:hover {
-    border-color: theme('colors.surface-variant');
+    border-color: var(--app-outline);
   }
   .code-bg {
-    background-color: #0D1220;
+    background-color: var(--app-surface-container-low);
   }
   
   @keyframes fadeUp {
@@ -305,22 +405,22 @@
                 radial-gradient(circle at bottom left, rgba(99, 102, 241, 0.05), transparent 50%);
   }
 
-  .border-tech { border: 1px solid #1E293B; }
-  .border-tech-hover:hover { border-color: #334155; }
+  .border-tech { border: 1px solid var(--app-outline-variant); }
+  .border-tech-hover:hover { border-color: var(--app-outline); }
   
-  .json-key { color: #8083ff; }
-  .json-string { color: #ffb783; }
-  .json-number { color: #d4e4fa; }
+  .json-key { color: var(--app-primary); }
+  .json-string { color: var(--app-tertiary); }
+  .json-number { color: var(--app-secondary); }
   
   .typewriter-content {
     overflow: hidden;
-    border-right: .15em solid #8083ff;
+    border-right: .15em solid var(--app-primary);
     white-space: pre-wrap;
     margin: 0;
     animation: typing 0.6s steps(40, end), blink-caret .75s step-end infinite;
   }
   @keyframes typing { from { max-height: 0; opacity: 0; } to { max-height: 500px; opacity: 1; } }
-  @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #8083ff; } }
+  @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--app-primary); } }
   
   .slide-in {
     animation: slideIn 200ms ease-out forwards;
