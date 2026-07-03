@@ -74,8 +74,6 @@ export default function CreateAppModal({ onSuccess, onDismiss }: CreateAppModalP
                         />
                     </div>
 
-                    </div>
-
                     {error && (
                         <div className="text-error font-body-md text-sm bg-error-container/20 border border-error/30 rounded-lg p-3">
                             {error}

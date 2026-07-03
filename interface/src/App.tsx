@@ -6,6 +6,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import EmptyDashboard from "./pages/EmptyDashboard";
+import Initialize from "./pages/Initialize";
 import Logs from "./pages/Logs";
 import ApiKeys from "./pages/ApiKeys";
 
@@ -51,6 +52,7 @@ function App() {
           {/* Protected routes */}
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/dashboard/empty" element={<ProtectedRoute><EmptyDashboard /></ProtectedRoute>} />
+          <Route path="/initialize" element={<ProtectedRoute><Initialize /></ProtectedRoute>} />
           <Route path="/logs" element={<ProtectedRoute><Logs /></ProtectedRoute>} />
           <Route path="/apikeys" element={<ProtectedRoute><ApiKeys /></ProtectedRoute>} />
 

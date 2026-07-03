@@ -14,7 +14,7 @@ export default function Signup() {
     e.preventDefault();
     try {
       await register({ email, password });
-      navigate("/dashboard");
+      navigate("/initialize");
     } catch (err) {
       console.error(err);
     }

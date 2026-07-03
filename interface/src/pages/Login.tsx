@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundShader from "../components/ui/BackgroundShader";
 import { useAuth } from "../store/useAuth";
-import CreateAppModal from "../components/ui/CreateAppModal";
 
 export default function Login() {
   const { login, isLoading, error } = useAuth();
@@ -10,7 +9,6 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showCreateApp, setShowCreateApp] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,15 +16,13 @@ export default function Login() {
 
     try {
       const user = await login({ email, password });
-      if (user.app_count === 0) {
-        setShowCreateApp(true);
-      } else {
-        navigate("/dashboard");
-      }
+      // If no workspaces yet, send them to the empty state
+      navigate(user.app_count === 0 ? "/initialize" : "/dashboard");
     } catch (err) {
       console.error(err);
     }
   };
+
 
   return (
     <div className="text-on-surface antialiased h-screen w-full flex font-body-md selection:bg-primary/30 selection:text-primary-fixed overflow-hidden">
@@ -193,13 +189,6 @@ export default function Login() {
           </main>
         </div>
       </div>
-
-      {showCreateApp && (
-        <CreateAppModal
-          onSuccess={() => navigate("/dashboard")}
-          onDismiss={() => navigate("/no-apps")}
-        />
-      )}
     </div>
   );
 }

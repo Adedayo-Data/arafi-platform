@@ -1,18 +1,18 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../store/useAuth";
-import { useApp } from "../../store/useApp";
+import { useWorkspace } from "../../store/useWorkspace";
 import AppSwitcher from "./AppSwitcher";
 
 const Sidebar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
   const { user, logout } = useAuth();
-  const { reset: resetApps } = useApp();
+  const { reset: resetWorkspaces } = useWorkspace();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    resetApps();
+    resetWorkspaces();
     navigate("/login");
   };
 

@@ -6,7 +6,6 @@ import { register as registerApi, login as loginApi, type Register, type Login }
 interface AuthState {
     user: User | null;
     accessToken: string | null;
-    refreshToken: string | null;
     isAuthenticated: boolean;
     isLoading: boolean;
     error: string | null;
@@ -16,10 +15,22 @@ interface AuthState {
     clearError: () => void;
 }
 
+function decodeJwt(token: string) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        return null;
+    }
+}
+
 export const useAuth = create<AuthState>()(persist((set) => ({
     user: null,
     accessToken: null,
-    refreshToken: null,
     isAuthenticated: false,
     isLoading: false,
     error: null,
@@ -27,8 +38,15 @@ export const useAuth = create<AuthState>()(persist((set) => ({
     login: async (credentials: Login) => {
         set({ isLoading: true, error: null });
         try {
-            const { accessToken, refreshToken, user } = await loginApi(credentials);
-            set({ user, accessToken, refreshToken, isAuthenticated: true, isLoading: false });
+            const { access_token, app_count } = await loginApi(credentials);
+            const decoded = decodeJwt(access_token);
+            const user: User = {
+                id: decoded?.sub || "",
+                email: decoded?.email || credentials.email,
+                name: decoded?.email?.split('@')[0] || credentials.email,
+                app_count,
+            };
+            set({ user, accessToken: access_token, isAuthenticated: true, isLoading: false });
             return user;
         } catch (error: any) {
             set({
@@ -42,8 +60,15 @@ export const useAuth = create<AuthState>()(persist((set) => ({
     register: async (credentials: Register) => {
         set({ isLoading: true, error: null });
         try {
-            const { accessToken, refreshToken, user } = await registerApi(credentials);
-            set({ user, accessToken, refreshToken, isAuthenticated: true, isLoading: false });
+            const { access_token, app_count } = await registerApi(credentials);
+            const decoded = decodeJwt(access_token);
+            const user: User = {
+                id: decoded?.sub || "",
+                email: decoded?.email || credentials.email,
+                name: decoded?.email?.split('@')[0] || credentials.email,
+                app_count,
+            };
+            set({ user, accessToken: access_token, isAuthenticated: true, isLoading: false });
             return user;
         } catch (error: any) {
             set({
@@ -54,7 +79,7 @@ export const useAuth = create<AuthState>()(persist((set) => ({
         }
     },
 
-    logout: () => set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false, error: null }),
+    logout: () => set({ user: null, accessToken: null, isAuthenticated: false, error: null }),
     clearError: () => set({ error: null }),
 }), {
     name: 'auth',

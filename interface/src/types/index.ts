@@ -7,9 +7,8 @@ export interface User {
 }
 
 export interface AuthResponse {
-    accessToken: string;
-    refreshToken: string;
-    user: User;
+    access_token: string;
+    app_count: number;
 }
 
 // ─── Workspaces ──────────────────────────────────────────────────────────────

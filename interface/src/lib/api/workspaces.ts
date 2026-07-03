@@ -9,3 +9,8 @@ export async function createWorkspace(body: CreateWorkspacePayload): Promise<Wor
     const { data } = await api.post('/v1/workspaces/create', body);
     return data;
 }
+
+export async function getWorkspaces(): Promise<Workspace[]> {
+    const { data } = await api.get('/v1/workspaces');
+    return data;
+}
