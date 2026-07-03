@@ -31,6 +31,7 @@ export interface Balance {
 // ─── Plans ───────────────────────────────────────────────────────────────────
 export interface Plan {
     id: string;
+    app_id: string;
     name: string;
     interval: string;          // e.g. "monthly", "weekly"
     amount_kobo: number;
@@ -73,11 +74,13 @@ export interface CreateCustomerPayload {
 // ─── Virtual Accounts ────────────────────────────────────────────────────────
 export interface VirtualAccount {
     id: string;
-    account_name: string;
-    account_number: string;
+    currency: string;
+    mode: string;
+    bank_account_number: string;
     bank_name: string;
     customer_ref: string;
-    created_at: string;
+    account_name?: string;
+    created_at?: string;
 }
 
 export interface CreateVirtualAccountPayload {

@@ -3,6 +3,8 @@ import DashboardLayout from "../components/dashboard/DashboardLayout";
 import ApiKeyDisplay from "../components/dashboard/ApiKeyDisplay";
 import StatCard from "../components/ui/StatCard";
 import EscrowTable from "../components/dashboard/EscrowTable";
+import VirtualAccountTable from "../components/dashboard/VirtualAccountTable";
+import PlanTable from "../components/dashboard/PlanTable";
 import WebhookTable from "../components/ui/WebhookTable";
 import { useWorkspace } from "../store/useWorkspace";
 import { useBalance } from "../store/useBalance";
@@ -147,8 +149,12 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <EscrowTable />
-      <WebhookTable />
+      <div className="flex flex-col gap-gutter">
+          <VirtualAccountTable />
+          <PlanTable />
+          <EscrowTable />
+          <WebhookTable />
+      </div>
     </DashboardLayout>
   );
 }
