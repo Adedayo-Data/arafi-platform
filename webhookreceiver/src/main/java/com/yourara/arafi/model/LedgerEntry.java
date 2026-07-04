@@ -2,29 +2,32 @@ package com.yourara.arafi.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "apps", schema = "arafi")
+@Table(name = "ledger_entries", schema = "arafi")
 @Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor
-public class App {
+public class LedgerEntry {
     @Id
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "app_id", nullable = false)
+    private UUID appId;
+
+    @Column(name = "account_number", nullable = false)
+    private String bankAccountNumber;
 
     @Column(nullable = false)
-    private String name;
+    private BigDecimal amount;
 
-    @Column(nullable = false)
-    private String status; // 'active', 'suspended'
+    @Column(name = "entry_type", nullable = false)
+    private String entryType; // 'CREDIT' or 'DEBIT'
 
-    @Column(name = "webhook_url")
-    private String webhookUrl;
+    @Column(name = "webhook_event_id")
+    private String webhookEventId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -32,7 +35,6 @@ public class App {
     @PrePersist
     protected void onCreate() {
         if (this.id == null) this.id = UUID.randomUUID();
-        this.status = "active";
         this.createdAt = Instant.now();
     }
 }

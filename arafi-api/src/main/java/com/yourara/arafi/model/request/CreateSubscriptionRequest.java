@@ -1,6 +1,7 @@
 package com.yourara.arafi.model.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.yourara.arafi.model.PaymentMethod;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.UUID;
@@ -14,4 +15,7 @@ public class CreateSubscriptionRequest {
 
     @JsonProperty("plan_id")
     private UUID planId;
+
+    @JsonProperty("payment_method")
+    private String paymentMethod;
 }
