@@ -1,30 +1,28 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundShader from "../components/ui/BackgroundShader";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../store/useAuth";
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, isLoading, error } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
 
-    setIsSubmitting(true);
-    setError("");
-
-    // Simulate a brief API call then log in
-    setTimeout(() => {
-      login(email);
-      navigate("/dashboard");
-    }, 1000);
+    try {
+      const user = await login({ email, password });
+      // If no workspaces yet, send them to the empty state
+      navigate(user.app_count === 0 ? "/initialize" : "/dashboard");
+    } catch (err) {
+      console.error(err);
+    }
   };
+
 
   return (
     <div className="text-on-surface antialiased h-screen w-full flex font-body-md selection:bg-primary/30 selection:text-primary-fixed overflow-hidden">
@@ -56,12 +54,12 @@ export default function Login() {
           </p>
           <div className="relative group mt-4 max-w-2xl">
             <div className="absolute -inset-4 bg-linear-to-tr from-primary/20 to-transparent blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
-            <div className="relative rounded-2xl overflow-hidden border border-white/10 backdrop-blur-3xl bg-white/5 shadow-2xl">
-              <div className="flex items-center px-4 py-2.5 bg-white/5 border-b border-white/10 gap-2">
+            <div className="relative rounded-2xl overflow-hidden border border-on-surface/10 backdrop-blur-3xl bg-on-surface/5 shadow-2xl">
+              <div className="flex items-center px-4 py-2.5 bg-on-surface/5 border-b border-on-surface/10 gap-2">
                 <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-on-surface/10"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-on-surface/10"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-on-surface/10"></div>
                 </div>
                 <span className="ml-2 font-code-sm text-[11px] text-on-surface/40 uppercase tracking-widest">
                   auth_flow.sh
@@ -70,13 +68,13 @@ export default function Login() {
               <div className="p-5 font-code-sm text-[13px] leading-relaxed text-secondary-fixed/80 overflow-x-auto">
                 <pre>
                   <code>
-                    {`curl https://api.arafi.com/v1/auth \\\n  -H `}
+                    {`curl https://api.arafi.com/v1/auth/login \\\n  -H `}
                     <span className="text-tertiary">
-                      "Authorization: Bearer sk_live_..."
+                      "Content-Type: application/json"
                     </span>
                     {` \\\n  -d `}
                     <span className="text-tertiary">
-                      {`'{ "app_name": "Production" }'`}
+                      {`'{ "email": "dev@company.com", "password": "***" }'`}
                     </span>
                     <span className="inline-block w-1.5 h-4 bg-primary ml-1 align-middle cursor-blink"></span>
                   </code>
@@ -117,7 +115,7 @@ export default function Login() {
                       Email
                     </label>
                     <input
-                      className="bg-surface-container-lowest/50 border border-white/10 rounded-lg p-3.5 font-body-md text-body-md text-on-surface custom-input placeholder:text-on-surface-variant/40"
+                      className="bg-surface-container-lowest/50 border border-on-surface/10 rounded-lg p-3.5 font-body-md text-body-md text-on-surface custom-input placeholder:text-on-surface-variant/40"
                       id="email"
                       name="email"
                       placeholder="name@company.com"
@@ -125,7 +123,7 @@ export default function Login() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      disabled={isSubmitting}
+                      disabled={isLoading}
                     />
                   </div>
 
@@ -137,7 +135,7 @@ export default function Login() {
                       Password
                     </label>
                     <input
-                      className="bg-surface-container-lowest/50 border border-white/10 rounded-lg p-3.5 font-body-md text-body-md text-on-surface custom-input placeholder:text-on-surface-variant/40"
+                      className="bg-surface-container-lowest/50 border border-on-surface/10 rounded-lg p-3.5 font-body-md text-body-md text-on-surface custom-input placeholder:text-on-surface-variant/40"
                       id="password"
                       name="password"
                       placeholder="••••••••••••"
@@ -145,29 +143,29 @@ export default function Login() {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      disabled={isSubmitting}
+                      disabled={isLoading}
                     />
                   </div>
 
                   {error && (
-                    <p className="text-error font-label-mono text-[12px]">
+                    <div className="text-error font-body-md text-[13px] bg-error-container/20 border border-error/30 rounded-lg p-3">
                       {error}
-                    </p>
+                    </div>
                   )}
 
                   <button
-                    className={`mt-4 w-full glow-button bg-inverse-primary text-on-primary font-label-mono text-label-mono py-4 px-4 rounded-lg transition-all duration-300 border-t border-white/20 shadow-xl shadow-indigo-500/20 flex justify-center items-center gap-2 relative overflow-hidden group ${
-                      isSubmitting
+                    className={`mt-4 w-full glow-button bg-inverse-primary text-on-primary font-label-mono text-label-mono py-4 px-4 rounded-lg transition-all duration-300 border-t border-on-surface/20 shadow-xl shadow-indigo-500/20 flex justify-center items-center gap-2 relative overflow-hidden group ${
+                      isLoading
                         ? "opacity-80 cursor-not-allowed"
                         : "hover:scale-[1.02]"
                     }`}
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isLoading}
                   >
                     <span className="relative z-10">
-                      {isSubmitting ? "Logging in..." : "Log in"}
+                      {isLoading ? "Logging in..." : "Log in"}
                     </span>
-                    {isSubmitting && (
+                    {isLoading && (
                       <span className="material-symbols-outlined text-[18px] animate-spin-custom relative z-10">
                         progress_activity
                       </span>
@@ -175,7 +173,7 @@ export default function Login() {
                   </button>
                 </form>
 
-                <div className="flex justify-center pt-2 border-t border-white/10">
+                <div className="flex justify-center pt-2 border-t border-on-surface/10">
                   <p className="font-body-md text-body-md text-on-surface/60">
                     Don't have an account?
                     <a

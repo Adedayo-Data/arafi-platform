@@ -13,7 +13,7 @@ export default function WebhookTable() {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-outline-variant bg-[#1a2133]/30">
+            <tr className="border-b border-outline-variant bg-surface-container-high/30">
               <th className="px-6 py-3 font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider">
                 URL
               </th>

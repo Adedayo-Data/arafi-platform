@@ -10,7 +10,7 @@ const StepCard = ({ icon, stepNumber, title, description, delay }: StepCardProps
     className="glass-card group relative rounded-2xl p-10 transition-all duration-500 fade-up"
     style={delay ? { transitionDelay: delay } : undefined}
   >
-    <div className="absolute -top-6 left-10 w-12 h-12 rounded-xl bg-surface border border-white/10 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:bg-primary/10 transition-all">
+    <div className="absolute -top-6 left-10 w-12 h-12 rounded-xl bg-surface border border-on-surface/10 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:bg-primary/10 transition-all">
       <span className="material-symbols-outlined text-primary">{icon}</span>
     </div>
     <div className="mt-4">

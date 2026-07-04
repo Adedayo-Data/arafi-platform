@@ -13,7 +13,7 @@ export default function DashboardLayout({
 }: DashboardLayoutProps) {
   return (
     <div
-      className={`font-body-md text-body-md antialiased flex bg-[#0B0F19] text-on-surface ${fullHeight ? "h-screen overflow-hidden" : "min-h-screen"}`}
+      className={`font-body-md text-body-md antialiased flex bg-background text-on-surface ${fullHeight ? "h-screen overflow-hidden" : "min-h-screen"}`}
     >
       {/* SideNavBar */}
       <Sidebar />

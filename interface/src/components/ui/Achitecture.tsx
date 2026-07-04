@@ -1,7 +1,7 @@
 const Architecture = () => {
   return (
     <section className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop mb-40">
-      <div className="glass-card rounded-3xl p-10 md:p-16 relative overflow-hidden border border-white/10 fade-up">
+      <div className="glass-card rounded-3xl p-10 md:p-16 relative overflow-hidden border border-on-surface/10 fade-up">
         <div className="absolute top-0 right-0 w-150 h-150 bg-primary/5 blur-[120px] -z-10 rounded-full"></div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
@@ -42,10 +42,10 @@ const Architecture = () => {
               </li>
             </ul>
           </div>
-          <div className="relative bg-surface-container-lowest/50 rounded-2xl border border-white/10 p-8 h-full min-h-75 flex items-center justify-center">
+          <div className="relative bg-surface-container-lowest/50 rounded-2xl border border-on-surface/10 p-8 h-full min-h-75 flex items-center justify-center">
             {/* Abstract Diagram */}
             <div className="flex flex-col gap-6 w-full max-w-sm relative z-10">
-              <div className="bg-white/5 border border-white/10 rounded-lg p-4 text-center font-label-mono text-sm">
+              <div className="bg-on-surface/5 border border-on-surface/10 rounded-lg p-4 text-center font-label-mono text-sm">
                 Your Application
               </div>
               <div className="flex justify-center">
@@ -62,18 +62,18 @@ const Architecture = () => {
                 </div>
               </div>
               <div className="flex justify-between px-8">
-                <span className="material-symbols-outlined text-white/20">
+                <span className="material-symbols-outlined text-on-surface/20">
                   arrow_downward
                 </span>
-                <span className="material-symbols-outlined text-white/20">
+                <span className="material-symbols-outlined text-on-surface/20">
                   arrow_downward
                 </span>
               </div>
               <div className="flex gap-4">
-                <div className="flex-1 bg-white/5 border border-white/10 rounded-lg p-4 text-center font-label-mono text-[10px] text-white/50">
+                <div className="flex-1 bg-on-surface/5 border border-on-surface/10 rounded-lg p-4 text-center font-label-mono text-[10px] text-on-surface/50">
                   Stripe
                 </div>
-                <div className="flex-1 bg-white/5 border border-white/10 rounded-lg p-4 text-center font-label-mono text-[10px] text-white/50">
+                <div className="flex-1 bg-on-surface/5 border border-on-surface/10 rounded-lg p-4 text-center font-label-mono text-[10px] text-on-surface/50">
                   Local Banks
                 </div>
               </div>
