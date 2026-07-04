@@ -20,6 +20,7 @@ import EscrowTransactions from "./pages/EscrowTransactions";
 import Plans from "./pages/Plans";
 import Subscribers from "./pages/Subscribers";
 import EmailTemplates from "./pages/EmailTemplates";
+import EmailTemplateBuilder from "./pages/EmailTemplateBuilder";
 import Webhooks from "./pages/Webhooks";
 
 import { useTheme } from "./store/useTheme";
@@ -75,6 +76,7 @@ function App() {
           <Route path="/plans" element={<ProtectedRoute><Plans /></ProtectedRoute>} />
           <Route path="/subscribers" element={<ProtectedRoute><Subscribers /></ProtectedRoute>} />
           <Route path="/email" element={<ProtectedRoute><EmailTemplates /></ProtectedRoute>} />
+          <Route path="/email/builder" element={<ProtectedRoute><EmailTemplateBuilder /></ProtectedRoute>} />
           <Route path="/webhooks" element={<ProtectedRoute><Webhooks /></ProtectedRoute>} />
           
           <Route path="/team" element={<ProtectedRoute><ComingSoon moduleName="Team" /></ProtectedRoute>} />
