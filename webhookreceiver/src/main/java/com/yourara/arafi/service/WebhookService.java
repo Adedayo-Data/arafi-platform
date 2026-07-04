@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,31 +28,46 @@ public class WebhookService {
     @Value("${arafi.nomba.signing.key}")
     private String signingKey;
 
-    // PROCESS RECEIVING A WEBHOOK
-    // controller layer would handle the check to find out if this request is from nomba
     @Async
     public void handleWebhook(String rawPayload, String signature){
-
         try {
-
-            System.out.println("Inside service layer");
-            // verify the signature
+            System.out.println("Webhook Ingestion: Verifying signature and persisting payload...");
             Boolean isVerified = verifySignature(rawPayload, signature);
 
-            System.out.println("isVerified Status: " +isVerified);
+            System.out.println("isVerified Status: " + isVerified);
             Map<String, Object> payloadMap = objectMapper.readValue(rawPayload, new TypeReference<>() {});
-            // Map webhook to DB entity
+            
+            String nombaEventId = (String) payloadMap.get("requestId");
+            if (nombaEventId == null) {
+                Object dataObj = payloadMap.get("data");
+                if (dataObj instanceof Map) {
+                    Map dataMap = (Map) dataObj;
+                    if (dataMap.get("transactionId") != null) {
+                        nombaEventId = dataMap.get("transactionId").toString();
+                    }
+                }
+            }
+            if (nombaEventId == null) {
+                nombaEventId = "nomba_evt_" + UUID.randomUUID().toString();
+            }
+
+            String eventType = (String) payloadMap.get("event_type");
+            if (eventType == null) {
+                eventType = "unknown";
+            }
+
             WebhookEvent webhook = WebhookEvent.builder()
-                    .nombaEventId((String) payloadMap.get("requestId"))
-                    .eventType((String) payloadMap.get("event_type"))
+                    .nombaEventId(nombaEventId)
+                    .eventType(eventType)
                     .rawPayload(payloadMap)
                     .isSignatureVerified(isVerified)
                     .processingStatus("received")
                     .build();
-            // save the raw payload from Nomba to the db
+
             webhookRepo.save(webhook);
+            System.out.println("Webhook Ingestion: Saved event " + nombaEventId + " successfully.");
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("JSON parsing failure on webhook", e);
         }
     }
 
@@ -67,12 +83,10 @@ public class WebhookService {
             byte[] rawHash = hmacSha256.doFinal(rawPayload.getBytes(StandardCharsets.UTF_8));
             String computedSignature = Base64.getEncoder().encodeToString(rawHash);
 
-            // Use constant-time comparison to prevent timing-attack exploits
             return MessageDigest.isEqual(computedSignature.getBytes(StandardCharsets.UTF_8),
                     signature.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             return false;
         }
     }
-
 }

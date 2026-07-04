@@ -6,31 +6,36 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "customers", schema = "arafi")
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Customer {
-
+@Table(name = "subscriptions", schema = "arafi")
+@Getter @Setter @Builder
+@NoArgsConstructor @AllArgsConstructor
+public class Subscription {
     @Id
     private UUID id;
 
     @Column(name = "app_id", nullable = false)
     private UUID appId;
 
-    @Column(nullable = false)
-    private String email;
+    @Column(name = "customer_id", nullable = false)
+    private UUID customerId;
 
-    @Column(name = "external_ref")
-    private String externalRef;
+    @Column(name = "plan_id", nullable = false)
+    private UUID planId;
+
+    @Column(nullable = false)
+    private String status; // "PENDING", "ACTIVE", "EXPIRED"
+
+    @Column(name = "current_period_end")
+    private Instant currentPeriodEnd;
 
     @Column(name = "nomba_token_key")
     private String nombaTokenKey;
 
     @Column(name = "virtual_account_number")
     private String virtualAccountNumber;
+
+    @Column(name = "nomba_reference")
+    private String nombaReference;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

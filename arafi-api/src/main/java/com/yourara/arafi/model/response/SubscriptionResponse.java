@@ -28,8 +28,17 @@ public class SubscriptionResponse {
     @JsonProperty("current_period_end")
     private Instant currentPeriodEnd;
 
+    @JsonProperty("nomba_token_key")
+    private String nombaTokenKey;
+
+    @JsonProperty("virtual_account_number")
+    private String virtualAccountNumber;
+
     @JsonProperty("nomba_reference")
     private String nombaReference;
+
+    @JsonProperty("checkout_url")
+    private String checkoutUrl;
 
     @JsonProperty("created_at")
     private Instant createdAt;

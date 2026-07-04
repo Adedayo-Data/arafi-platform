@@ -27,13 +27,22 @@ public class Subscription {
     private UUID planId;
 
     @Column(nullable = false)
-    private String status; // active, past_due, canceled
+    private String status; // "PENDING", "ACTIVE", "EXPIRED"
 
     @Column(name = "current_period_end")
     private Instant currentPeriodEnd;
 
+    @Column(name = "nomba_token_key")
+    private String nombaTokenKey; // Stored from tokenized card checkout webhooks
+
+    @Column(name = "virtual_account_number")
+    private String virtualAccountNumber; // Bound static transfer fallback account
+
     @Column(name = "nomba_reference")
     private String nombaReference;
+
+    @Column(name = "checkout_url", columnDefinition = "TEXT")
+    private String checkoutUrl;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
