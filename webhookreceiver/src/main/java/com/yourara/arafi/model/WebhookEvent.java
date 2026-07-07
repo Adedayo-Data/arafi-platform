@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Entity
+@Table(name = "webhook_events", schema = "arafi")
 @Getter
 @Setter
 @NoArgsConstructor
