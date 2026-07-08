@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yourara.arafi.model.WebhookEvent;
 import com.yourara.arafi.repository.WebhookRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
@@ -18,6 +18,7 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WebhookService {
@@ -28,19 +29,16 @@ public class WebhookService {
     @Value("${arafi.nomba.signing.key}")
     private String signingKey;
 
-    @Async
-    public void handleWebhook(String rawPayload, String signature){
+    public void handleWebhook(String rawPayload, String signature) {
+        log.info("WebhookService.handleWebhook() — starting ingestion");
         try {
-            System.out.println("[Webhook Ingestion] =================== Webhook Event Received ===================");
-            System.out.println("[Webhook Ingestion] Raw Payload:\n" + rawPayload);
-            System.out.println("[Webhook Ingestion] nomba-signature Header: " + signature);
-            System.out.println("[Webhook Ingestion] Signing key status: " + (signingKey != null ? "CONFIGURED (length: " + signingKey.length() + ")" : "NOT CONFIGURED"));
-
+            log.info("Verifying HMAC signature...");
             Boolean isVerified = verifySignature(rawPayload, signature);
-            System.out.println("[Webhook Ingestion] Verification Status: " + isVerified);
+            log.info("Signature verification result: {}", isVerified ? "VERIFIED" : "FAILED (signature mismatch or missing key)");
 
             Map<String, Object> payloadMap = objectMapper.readValue(rawPayload, new TypeReference<>() {});
-            
+            log.info("JSON parsed successfully. Top-level keys: {}", payloadMap.keySet());
+
             String nombaEventId = (String) payloadMap.get("requestId");
             if (nombaEventId == null) {
                 Object dataObj = payloadMap.get("data");
@@ -53,11 +51,21 @@ public class WebhookService {
             }
             if (nombaEventId == null) {
                 nombaEventId = "nomba_evt_" + UUID.randomUUID().toString();
+                log.warn("No requestId or transactionId found in payload — generated fallback ID: {}", nombaEventId);
+            } else {
+                log.info("Nomba event ID extracted: {}", nombaEventId);
             }
 
             String eventType = (String) payloadMap.get("event_type");
             if (eventType == null) {
+                // also try "event" as some Nomba payloads use this key
+                eventType = (String) payloadMap.get("event");
+            }
+            if (eventType == null) {
                 eventType = "unknown";
+                log.warn("No event_type or event field found in payload — defaulting to 'unknown'. Full keys: {}", payloadMap.keySet());
+            } else {
+                log.info("Event type: {}", eventType);
             }
 
             WebhookEvent webhook = WebhookEvent.builder()
@@ -69,17 +77,20 @@ public class WebhookService {
                     .build();
 
             webhookRepo.save(webhook);
-            System.out.println("[Webhook Ingestion] Event " + nombaEventId + " successfully persisted to DB queue.");
-            System.out.println("[Webhook Ingestion] =================================================================");
+            log.info("Webhook saved to DB successfully — eventId={}, eventType={}, signatureVerified={}",
+                    nombaEventId, eventType, isVerified);
+
         } catch (JsonProcessingException e) {
-            System.err.println("[Webhook Ingestion] JSON parsing failure: " + e.getMessage());
+            log.error("JSON parsing failed on webhook payload: {}", e.getMessage());
             throw new RuntimeException("JSON parsing failure on webhook", e);
         }
     }
 
-    private Boolean verifySignature(String rawPayload, String signature){
-        if(signature == null || signingKey == null){
-            System.err.println("[Webhook Ingestion] Signature verification bypassed/failed: signature or signingKey is null.");
+    private Boolean verifySignature(String rawPayload, String signature) {
+        if (signature == null || signingKey == null) {
+            log.warn("verifySignature: signature={}, signingKey configured={}",
+                    signature == null ? "NULL" : "present",
+                    signingKey != null && !signingKey.isBlank() ? "YES" : "NO");
             return false;
         }
         try {
@@ -88,16 +99,21 @@ public class WebhookService {
             hmacSha256.init(secretKey);
 
             byte[] rawHash = hmacSha256.doFinal(rawPayload.getBytes(StandardCharsets.UTF_8));
-            String computedSignature = java.util.HexFormat.of().formatHex(rawHash);
+            String computedSignature = Base64.getEncoder().encodeToString(rawHash);
 
-            boolean isMatch = MessageDigest.isEqual(computedSignature.toLowerCase().getBytes(StandardCharsets.UTF_8),
-                    signature.toLowerCase().getBytes(StandardCharsets.UTF_8));
+            log.debug("Computed signature (Base64): {}", computedSignature);
+            log.debug("Received signature:           {}", signature);
 
-            System.out.println("[Webhook Ingestion] Computed Signature: " + computedSignature);
-            System.out.println("[Webhook Ingestion] Signature Match Result: " + isMatch);
-            return isMatch;
+            boolean match = MessageDigest.isEqual(
+                    computedSignature.getBytes(StandardCharsets.UTF_8),
+                    signature.getBytes(StandardCharsets.UTF_8));
+
+            if (!match) {
+                log.warn("Signature MISMATCH — computed={} received={}", computedSignature, signature);
+            }
+            return match;
         } catch (Exception e) {
-            System.err.println("[Webhook Ingestion] Signature verification exception: " + e.getMessage());
+            log.error("Signature verification threw exception: {}", e.getMessage(), e);
             return false;
         }
     }
