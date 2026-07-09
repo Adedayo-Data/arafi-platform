@@ -680,24 +680,76 @@ export default function Docs() {
                 {activeGuide === "sdk" && (
                   <div className="flex flex-col gap-6 animate-fade-in">
                     <header className="border-b border-on-surface/10 pb-5">
-                      <h1 className="font-headline-lg text-2xl font-bold text-white mb-2">SDK & Client Libraries</h1>
-                      <p className="text-on-surface/60 text-sm">Drop-in checkout buttons and payment widget overlays.</p>
+                      <h1 className="font-headline-lg text-2xl font-bold text-white mb-2">SDK & Database Adapters</h1>
+                      <p className="text-on-surface/60 text-sm">Simplifying merchant integration and zero-code backend database synchronization.</p>
                     </header>
                     <article className="flex flex-col gap-4 text-on-surface/80 text-sm leading-relaxed">
+                      <h3 className="font-headline-sm font-semibold text-white text-base">Why We Intend to Build Frontend SDKs</h3>
                       <p>
-                        Arafi provides client libraries to quickly integrate checkout widgets into React, Vue, Next.js, and mobile applications.
+                        Currently, merchants use redirect checkout pages to process subscription invoices and e-commerce payments. While robust, redirecting disrupts the customer checkout experience.
                       </p>
-                      <div className="bg-on-surface/5 border border-on-surface/10 rounded-2xl p-5 mt-3">
-                        <span className="text-[10px] text-primary uppercase font-mono block mb-2 font-bold font-semibold">Example JS Integration</span>
-                        <pre className="text-xs font-mono text-on-surface/80 overflow-x-auto whitespace-pre-wrap">
-{`import { ArafiCheckout } from '@arafi/widget';
+                      <p>
+                        We intend to build standard **JavaScript/TypeScript and Mobile SDKs** to enable **inline, modal checkouts** directly inside the merchant's application:
+                      </p>
+                      <ul className="list-disc pl-5 flex flex-col gap-2.5 text-xs text-on-surface/70">
+                        <li><strong>Drop-in UI Elements:</strong> Expose pre-styled credit card inputs and virtual account details overlay boxes matching the brand's aesthetic.</li>
+                        <li><strong>Safe Client Sessions:</strong> Perform secure public token lookups and handle client-side polling status updates automatically.</li>
+                        <li><strong>Zero Redirects:</strong> Complete the transaction inside an iframe modal overlay, reducing purchase drop-offs.</li>
+                      </ul>
 
-ArafiCheckout.init({
-  publishableKey: 'arafi_test_xyz100...',
-  onSuccess: (transaction) => {
-    console.log('Payment complete!', transaction.id);
+                      <div className="bg-on-surface/5 border border-on-surface/10 rounded-2xl p-5 mt-2">
+                        <span className="text-[10px] text-primary uppercase font-mono block mb-2 font-bold font-semibold">SDK Inline Checkout Example</span>
+                        <pre className="text-xs font-mono text-on-surface/80 overflow-x-auto whitespace-pre-wrap">
+{`import { ArafiCheckout } from '@arafi/js';
+
+// Open Arafi modal inline
+ArafiCheckout.open({
+  publicKey: "arafi_test_pk_99218...",
+  checkoutId: "tx_product_88921",
+  onSuccess: (tx) => {
+    console.log("Verified payment:", tx.transactionId);
+    showToast("Purchase Complete!");
+  },
+  onClose: () => {
+    console.log("Payment overlay closed.");
   }
 });`}
+                        </pre>
+                      </div>
+
+                      <h3 className="font-headline-sm font-semibold text-white text-base mt-6">Zero-Code Database Adapters</h3>
+                      <p>
+                        Typically, developers write endpoint webhook handlers to receive success event payloads, authenticate signatures, look up order logs, and write updates back to their databases. 
+                      </p>
+                      <p>
+                        Arafi is releasing **Database Adapters** (compatible with Prisma, Drizzle, and TypeORM) to completely eliminate webhook handler boilerplate code:
+                      </p>
+                      <ul className="list-disc pl-5 flex flex-col gap-2.5 text-xs text-on-surface/70">
+                        <li><strong>Auto-Reconciliation:</strong> When Arafi verifies a payment, the adapter receives the secure webhook event and writes the success status directly to your database.</li>
+                        <li><strong>Schema Mapping:</strong> Maps custom table names (e.g. `UserSubscription` or `Orders`) and column names directly in the configuration file.</li>
+                      </ul>
+
+                      <div className="bg-on-surface/5 border border-on-surface/10 rounded-2xl p-5 mt-2">
+                        <span className="text-[10px] text-primary uppercase font-mono block mb-2 font-bold font-semibold">Backend Drizzle ORM Adapter Setup</span>
+                        <pre className="text-xs font-mono text-on-surface/80 overflow-x-auto whitespace-pre-wrap">
+{`import { ArafiAdapter } from "@arafi/adapter-drizzle";
+import { db } from "./db";
+import { subscriptionsTable } from "./schema";
+
+export const arafiHandler = ArafiAdapter({
+  db: db,
+  secret: process.env.ARAFI_WEBHOOK_SECRET,
+  mapping: {
+    subscriptions: {
+      table: subscriptionsTable,
+      statusColumn: "isActive",
+      expiryColumn: "expiresAt"
+    }
+  }
+});
+
+// That's it! Route webhooks directly to this handler. 
+// Arafi updates user states on payment confirmations automatically.`}
                         </pre>
                       </div>
                     </article>
