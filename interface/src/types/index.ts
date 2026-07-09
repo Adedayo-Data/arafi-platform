@@ -18,6 +18,9 @@ export interface Workspace {
     app_name: string;
     sandbox_key: string;
     live_key: string;
+    webhook_url?: string;
+    redirect_url?: string;
+    webhook_secret?: string;
 }
 
 // ─── Balances ────────────────────────────────────────────────────────────────
@@ -35,6 +38,7 @@ export interface Plan {
     name: string;
     interval: string;          // e.g. "monthly", "weekly"
     amount_kobo: number;
+    grace_period_days?: number;
     created_at: string;
 }
 
@@ -42,6 +46,7 @@ export interface CreatePlanPayload {
     name: string;
     interval: string;
     amount_kobo: number;
+    grace_period_days?: number;
 }
 
 // ─── Subscriptions ───────────────────────────────────────────────────────────
@@ -56,6 +61,9 @@ export interface Subscription {
 export interface CreateSubscriptionPayload {
     customer_id: string;
     plan_id: string;
+    payment_method?: string;
+    redirect_url?: string;
+    coupon_code?: string;
 }
 
 // ─── Customers ───────────────────────────────────────────────────────────────

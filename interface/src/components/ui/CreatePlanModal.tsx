@@ -11,6 +11,7 @@ export default function CreatePlanModal({ onDismiss, onSuccess }: CreatePlanModa
     const [name, setName] = useState("");
     const [interval, setInterval] = useState("monthly");
     const [amountStr, setAmountStr] = useState("");
+    const [gracePeriodDays, setGracePeriodDays] = useState(0);
     const [error, setError] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -32,7 +33,7 @@ export default function CreatePlanModal({ onDismiss, onSuccess }: CreatePlanModa
         const amount_kobo = Math.round(amount * 100);
 
         try {
-            await create({ name, interval, amount_kobo });
+            await create({ name, interval, amount_kobo, grace_period_days: gracePeriodDays });
             onSuccess();
         } catch (err: any) {
             setError(err?.response?.data?.message || "Failed to create billing plan");
@@ -115,6 +116,27 @@ export default function CreatePlanModal({ onDismiss, onSuccess }: CreatePlanModa
                                 <option value="yearly">Yearly</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                        <label className="font-label-mono text-xs text-on-surface-variant uppercase tracking-wider block">
+                            Billing Grace Period (Dunning Retries)
+                        </label>
+                        <select
+                            value={gracePeriodDays}
+                            onChange={(e) => setGracePeriodDays(parseInt(e.target.value))}
+                            className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
+                        >
+                            <option value={0}>0 Days (Immediate Expiry)</option>
+                            <option value={1}>1 Day Grace Period</option>
+                            <option value={2}>2 Days Grace Period</option>
+                            <option value={3}>3 Days Grace Period</option>
+                            <option value={5}>5 Days Grace Period</option>
+                            <option value={7}>7 Days (Max Grace Period)</option>
+                        </select>
+                        <p className="text-[11px] text-on-surface-variant/70 leading-relaxed">
+                            Number of days we will retry failed renewal card charges before expiring.
+                        </p>
                     </div>
 
                     <div className="pt-2 flex justify-end gap-3">

@@ -43,6 +43,9 @@ export default function PlanTable() {
                                     Interval
                                 </th>
                                 <th className="px-6 py-3 font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider">
+                                    Grace Period
+                                </th>
+                                <th className="px-6 py-3 font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider">
                                     Created At
                                 </th>
                             </tr>
@@ -50,13 +53,13 @@ export default function PlanTable() {
                         <tbody className="font-code-sm text-code-sm divide-y divide-outline-variant">
                             {isLoading && plans.length === 0 ? (
                                 <tr>
-                                    <td colSpan={4} className="px-6 py-8 text-center text-on-surface-variant animate-pulse">
+                                    <td colSpan={5} className="px-6 py-8 text-center text-on-surface-variant animate-pulse">
                                         Loading plans...
                                     </td>
                                 </tr>
                             ) : plans.length === 0 ? (
                                 <tr>
-                                    <td colSpan={4} className="px-6 py-8 text-center text-on-surface-variant">
+                                    <td colSpan={5} className="px-6 py-8 text-center text-on-surface-variant">
                                         No billing plans created yet.
                                     </td>
                                 </tr>
@@ -82,6 +85,9 @@ export default function PlanTable() {
                                             <span className="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] uppercase tracking-wider border border-outline-variant/50">
                                                 {plan.interval}
                                             </span>
+                                        </td>
+                                        <td className="px-6 py-4 text-on-surface">
+                                            {plan.grace_period_days ? `${plan.grace_period_days} Days` : "Immediate"}
                                         </td>
                                         <td className="px-6 py-4 text-outline">
                                             {plan.created_at ? new Date(plan.created_at).toLocaleDateString() : "Just now"}
