@@ -28,7 +28,7 @@ const Navbar = () => {
             </a>
             <a
               className="font-body-md text-body-md text-on-surface/60 hover:text-on-surface transition-colors"
-              href="#"
+              href="/docs"
             >
               Documentation
             </a>

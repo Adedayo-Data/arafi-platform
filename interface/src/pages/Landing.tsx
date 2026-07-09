@@ -104,7 +104,10 @@ const Landing = () => {
                   arrow_forward
                 </span>
               </button>
-              <button className="font-label-mono text-label-mono text-on-surface backdrop-blur-xl bg-on-surface/5 px-8 py-4 rounded-DEFAULT border border-on-surface/10 hover:border-on-surface/20 hover:bg-on-surface/10 transition-all flex items-center gap-2">
+              <button 
+                onClick={() => navigate("/docs")}
+                className="font-label-mono text-label-mono text-on-surface backdrop-blur-xl bg-on-surface/5 px-8 py-4 rounded-DEFAULT border border-on-surface/10 hover:border-on-surface/20 hover:bg-on-surface/10 transition-all flex items-center gap-2"
+              >
                 <span className="material-symbols-outlined text-[18px]">
                   menu_book
                 </span>{" "}

@@ -12,6 +12,17 @@
 
 ---
 
+## 👨‍⚖️ HACKATHON JUDGE DEMO CREDENTIALS
+
+To access the Arafi Dashboard and test the application, log in with the following global demo credentials:
+
+* **Email**: `judge@nomba.com`
+* **Password**: `nomba2026`
+
+Use these credentials to log in at [https://arafi-platform.vercel.app/login](https://arafi-platform.vercel.app/login) (or your local dashboard instance).
+
+---
+
 ## The Problem with Payments Today
 
 Payment gateways like Nomba, Paystack, and Stripe solve **money movement** — getting funds from A to B. What they don't solve is **money logic** — everything that happens before and after.

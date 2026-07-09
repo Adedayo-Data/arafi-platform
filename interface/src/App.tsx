@@ -24,6 +24,7 @@ import EmailTemplateBuilder from "./pages/EmailTemplateBuilder";
 import Webhooks from "./pages/Webhooks";
 import CheckoutCallback from "./pages/CheckoutCallback";
 import CheckoutPage from "./pages/CheckoutPage";
+import Docs from "./pages/Docs";
 
 import { useTheme } from "./store/useTheme";
 
@@ -59,12 +60,13 @@ function App() {
   return (
       <Router>
         <Routes>
-          {/* Public routes */}
+           {/* Public routes */}
           <Route path="/" element={<Landing />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/checkout/callback" element={<CheckoutCallback />} />
           <Route path="/checkout/:subscriptionId" element={<CheckoutPage />} />
+          <Route path="/docs" element={<Docs />} />
 
           {/* Protected routes */}
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
@@ -85,7 +87,6 @@ function App() {
           
           <Route path="/team" element={<ProtectedRoute><ComingSoon moduleName="Team" /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><ComingSoon moduleName="Settings" /></ProtectedRoute>} />
-          <Route path="/docs" element={<ProtectedRoute><ComingSoon moduleName="Documentation" /></ProtectedRoute>} />
           <Route path="/support" element={<ProtectedRoute><ComingSoon moduleName="Support" /></ProtectedRoute>} />
 
           {/* Fallback */}
