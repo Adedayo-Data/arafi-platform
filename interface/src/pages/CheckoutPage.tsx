@@ -54,7 +54,7 @@ export default function CheckoutPage() {
         setBankDetails({
           bankAccountNumber: data.virtualAccountNumber,
           bankName: "Nomba Bank",
-          bankAccountName: `ARAFI * ${data.customerEmail}`
+          bankAccountName: data.customerName ? `ARAFI * ${data.customerName}` : `ARAFI * ${data.customerEmail}`
         });
       }
     } catch (err: any) {

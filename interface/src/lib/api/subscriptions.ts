@@ -38,6 +38,7 @@ export interface PublicSubscriptionDetails {
     appliedCouponCode: string | null;
     interval: string;
     customerEmail: string;
+    customerName?: string | null;
     virtualAccountNumber: string | null;
     status: string;
     mode: string;
