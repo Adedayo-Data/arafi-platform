@@ -23,4 +23,7 @@ public class App {
 
     @Column(name = "payout_bank_name")
     private String payoutBankName;
+
+    @Column(name = "redirect_url")
+    private String redirectUrl;
 }
