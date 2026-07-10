@@ -60,6 +60,10 @@ export default function DemoStore() {
   const [name, setName] = useState("Jane Doe");
   const [paymentMethod, setPaymentMethod] = useState<"CARD" | "BANK_TRANSFER">("BANK_TRANSFER");
   
+  // Customer Context State
+  const [resolvedCustomer, setResolvedCustomer] = useState<any>(null);
+  const [verifyingCustomer, setVerifyingCustomer] = useState(false);
+
   // Interactive Console Logs
   const [consoleLogs, setConsoleLogs] = useState<string[]>([
     "// Welcome to Arafi Sandbox Console",
@@ -72,6 +76,50 @@ export default function DemoStore() {
 
   const logConsole = (text: string) => {
     setConsoleLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ${text}`]);
+  };
+
+  const handleVerifyCustomer = async () => {
+    if (!email || !name) {
+      logConsole("Error: Please fill in Customer Name and Email to verify.");
+      return;
+    }
+    setVerifyingCustomer(true);
+    setResolvedCustomer(null);
+    logConsole(`Executing Customer Verification Pipeline...`);
+
+    const apiUrl = process.env.NEXT_PUBLIC_ARAFI_API_URL || "https://arafi-api.onrender.com";
+    const apiKey = process.env.NEXT_PUBLIC_ARAFI_PUBLISHABLE_KEY || "";
+
+    const customerPayload = {
+      email: email,
+      name: name,
+      external_ref: `cus_ref_${Math.random().toString(36).substring(2, 8)}`
+    };
+    logConsole(`POST ${apiUrl}/v1/customers\nPayload: ${JSON.stringify(customerPayload, null, 2)}`);
+
+    try {
+      const customerRes = await fetch(`${apiUrl}/v1/customers`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(customerPayload)
+      });
+
+      if (!customerRes.ok) {
+        const errorData = await customerRes.json().catch(() => ({}));
+        throw new Error(`Customer Error: ${errorData.error || errorData.message || customerRes.status}`);
+      }
+
+      const customerData = await customerRes.json();
+      logConsole(`Response 200 OK (Customer Resolved):\n${JSON.stringify(customerData, null, 2)}`);
+      setResolvedCustomer(customerData);
+    } catch (err: any) {
+      logConsole(`Customer verification failed: ${err.message}`);
+    } finally {
+      setVerifyingCustomer(false);
+    }
   };
 
   const handleProductCheckout = async (product: ProductItem) => {
