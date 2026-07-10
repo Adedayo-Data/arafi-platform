@@ -6,7 +6,7 @@
 
 **The missing layer between your app and your payment gateway.**
 
-[Documentation](https://arafi-platform.vercel.app/docs) · [API Reference](https://arafi-platform.vercel.app/docs) · [SDK](https://arafi-platform.vercel.app/docs) · [Dashboard](https://arafi-platform.vercel.app/login)
+[Documentation](https://arafi-platform.vercel.app/docs) · [API Reference](https://arafi-platform.vercel.app/docs) · [Dashboard](https://arafi-platform.vercel.app/login) · [Interactive Demo Store](https://demoapp-sandy-chi.vercel.app/)
 
 </div>
 
@@ -20,6 +20,10 @@ To access the Arafi Dashboard and test the application, log in with the followin
 * **Password**: `nomba2026`
 
 Use these credentials to log in at [https://arafi-platform.vercel.app/login](https://arafi-platform.vercel.app/login) (or your local dashboard instance).
+
+### 🏪 Interactive Demo Store Sandbox
+Test the developer integration live on our Demo Store:
+👉 **[Arafi Store & Billing Demo](https://demoapp-sandy-chi.vercel.app/)**
 
 ---
 
