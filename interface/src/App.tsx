@@ -25,6 +25,8 @@ import Webhooks from "./pages/Webhooks";
 import CheckoutCallback from "./pages/CheckoutCallback";
 import CheckoutPage from "./pages/CheckoutPage";
 import Docs from "./pages/Docs";
+import Settings from "./pages/Settings";
+import DashboardDocs from "./pages/DashboardDocs";
 
 import { useTheme } from "./store/useTheme";
 
@@ -84,9 +86,10 @@ function App() {
           <Route path="/email" element={<ProtectedRoute><EmailTemplates /></ProtectedRoute>} />
           <Route path="/email/builder" element={<ProtectedRoute><EmailTemplateBuilder /></ProtectedRoute>} />
           <Route path="/webhooks" element={<ProtectedRoute><Webhooks /></ProtectedRoute>} />
+          <Route path="/dashboard/docs" element={<ProtectedRoute><DashboardDocs /></ProtectedRoute>} />
           
           <Route path="/team" element={<ProtectedRoute><ComingSoon moduleName="Team" /></ProtectedRoute>} />
-          <Route path="/settings" element={<ProtectedRoute><ComingSoon moduleName="Settings" /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/support" element={<ProtectedRoute><ComingSoon moduleName="Support" /></ProtectedRoute>} />
 
           {/* Fallback */}

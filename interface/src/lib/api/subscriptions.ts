@@ -63,3 +63,38 @@ export async function simulatePublicBankTransfer(virtualAccountNumber: string, a
     const { data } = await api.post(`/v1/subscriptions/public/simulate-transfer`, { virtualAccountNumber, amount });
     return data;
 }
+
+export async function cancelSubscription(id: string, immediately: boolean = false): Promise<Subscription> {
+    const { data } = await api.delete(`/v1/subscriptions/${id}/cancel?immediately=${immediately}`);
+    return data;
+}
+
+export async function pauseSubscription(id: string): Promise<Subscription> {
+    const { data } = await api.post(`/v1/subscriptions/${id}/pause`);
+    return data;
+}
+
+export async function resumeSubscription(id: string): Promise<Subscription> {
+    const { data } = await api.post(`/v1/subscriptions/${id}/resume`);
+    return data;
+}
+
+export async function changeSubscriptionPlan(id: string, planId: string): Promise<Subscription> {
+    const { data } = await api.put(`/v1/subscriptions/${id}/plan`, { planId });
+    return data;
+}
+
+export async function verifySubscriptionPayment(id: string): Promise<any> {
+    const { data } = await api.post(`/v1/subscriptions/${id}/verify-payment`);
+    return data;
+}
+
+export async function runSubscriptionRenewals(): Promise<{ message: string }> {
+    const { data } = await api.post('/v1/subscriptions/run-renewals');
+    return data;
+}
+
+export async function runSubscriptionWebhooks(): Promise<{ message: string }> {
+    const { data } = await api.post('/v1/subscriptions/run-webhooks');
+    return data;
+}

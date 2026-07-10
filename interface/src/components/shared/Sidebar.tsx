@@ -47,6 +47,13 @@ const Sidebar = () => {
         { name: "Templates", icon: "mail", path: "/email", isActive: currentPath === "/email" },
       ],
     },
+    {
+      title: "GENERAL",
+      items: [
+        { name: "Settings", icon: "settings", path: "/settings", isActive: currentPath === "/settings" },
+        { name: "Support", icon: "help", path: "/support", isActive: currentPath === "/support" },
+      ],
+    },
   ];
 
   return (
