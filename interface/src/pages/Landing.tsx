@@ -97,21 +97,21 @@ const Landing = () => {
             >
               <button
                 className="glow-button font-label-mono text-label-mono bg-inverse-primary text-on-primary px-8 py-4 rounded-DEFAULT transition-all duration-300 hover:scale-[1.02] border-t border-on-surface/20 flex items-center gap-2 shadow-2xl shadow-indigo-500/30"
-                onClick={() => navigate("/signup")}
+                onClick={() => window.open("https://demoapp-sandy-chi.vercel.app/", "_blank")}
               >
-                Start Building Free{" "}
+                View Live Demo{" "}
                 <span className="material-symbols-outlined text-[18px]">
-                  arrow_forward
+                  open_in_new
                 </span>
               </button>
               <button 
-                onClick={() => navigate("/docs")}
+                onClick={() => navigate("/signup")}
                 className="font-label-mono text-label-mono text-on-surface backdrop-blur-xl bg-on-surface/5 px-8 py-4 rounded-DEFAULT border border-on-surface/10 hover:border-on-surface/20 hover:bg-on-surface/10 transition-all flex items-center gap-2"
               >
+                Start Building
                 <span className="material-symbols-outlined text-[18px]">
-                  menu_book
-                </span>{" "}
-                Documentation
+                  arrow_forward
+                </span>
               </button>
             </div>
           </div>
