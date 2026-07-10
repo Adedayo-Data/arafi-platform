@@ -156,6 +156,61 @@ export default function WebhookTable() {
           </div>
         </div>
       )}
+
+      {/* Active Webhook Configuration Summary Card */}
+      <div className="surface-panel rounded-xl overflow-hidden border border-outline-variant/30 animate-fade-up delay-180 bg-[#0c0e12]/40">
+        <div className="px-6 py-4 border-b border-outline-variant/30 bg-surface-container-low flex justify-between items-center">
+          <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+            <span className="material-symbols-outlined text-purple-400 text-[20px]">verified_user</span>
+            Active Integration Status
+          </h3>
+        </div>
+        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Webhook URL Visual Card */}
+          <div className="bg-[#050608] border border-white/5 rounded-2xl p-5 flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">Outbound Webhooks</span>
+              <span className={`text-[9px] px-2 py-0.5 rounded font-mono uppercase font-semibold ${
+                activeWorkspace.webhook_url
+                  ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
+                  : "text-amber-400 bg-amber-500/10 border border-amber-500/20"
+              }`}>
+                {activeWorkspace.webhook_url ? "Active" : "Inactive"}
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-semibold text-white truncate font-mono">
+                {activeWorkspace.webhook_url || "Not configured"}
+              </span>
+              <p className="text-[11px] text-zinc-400 leading-normal mt-1">
+                Arafi dispatches event payloads to this API endpoint on state transitions.
+              </p>
+            </div>
+          </div>
+
+          {/* Success Redirect Visual Card */}
+          <div className="bg-[#050608] border border-white/5 rounded-2xl p-5 flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">Redirect Landing Page</span>
+              <span className={`text-[9px] px-2 py-0.5 rounded font-mono uppercase font-semibold ${
+                activeWorkspace.redirect_url
+                  ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
+                  : "text-amber-400 bg-amber-500/10 border border-amber-500/20"
+              }`}>
+                {activeWorkspace.redirect_url ? "Active" : "Inactive"}
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-semibold text-white truncate font-mono">
+                {activeWorkspace.redirect_url || "Not configured"}
+              </span>
+              <p className="text-[11px] text-zinc-400 leading-normal mt-1">
+                Subscribers land on this success screen after completing their hosted checkout.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
