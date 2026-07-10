@@ -72,6 +72,7 @@ export default function DemoStore() {
   
   // Simulated Checkout Link
   const [generatedLink, setGeneratedLink] = useState<string | null>(null);
+  const [allocatedBank, setAllocatedBank] = useState<{ account: string; bank: string; name: string; amount: number } | null>(null);
   const [loading, setLoading] = useState(false);
 
   const logConsole = (text: string) => {
@@ -125,6 +126,7 @@ export default function DemoStore() {
   const handleProductCheckout = async (product: ProductItem) => {
     setLoading(true);
     setGeneratedLink(null);
+    setAllocatedBank(null);
     logConsole(`Initializing one-off product checkout for: ${product.name}`);
     
     const requestPayload = {
@@ -168,6 +170,7 @@ export default function DemoStore() {
   const handlePlanSubscription = async (plan: PlanItem) => {
     setLoading(true);
     setGeneratedLink(null);
+    setAllocatedBank(null);
     logConsole(`Executing subscription pipeline for plan: ${plan.name}`);
 
     const apiUrl = process.env.NEXT_PUBLIC_ARAFI_API_URL || "https://arafi-api.onrender.com";
@@ -229,7 +232,16 @@ export default function DemoStore() {
       const subData = await subRes.json();
       logConsole(`Response 200 OK (Subscription Created):\n${JSON.stringify(subData, null, 2)}`);
       
-      setGeneratedLink(subData.checkoutUrl);
+      if (subData.checkoutUrl) {
+        setGeneratedLink(subData.checkoutUrl);
+      } else if (subData.virtualAccountNumber || subData.virtual_account_number) {
+        setAllocatedBank({
+          account: subData.virtualAccountNumber || subData.virtual_account_number,
+          bank: "Wema Bank (Nomba Sandbox)",
+          name: `Arafi * ${name}`,
+          amount: plan.price
+        });
+      }
     } catch (err: any) {
       logConsole(`Error generating subscription checkout: ${err.message}`);
     } finally {
@@ -240,6 +252,7 @@ export default function DemoStore() {
   const clearConsole = () => {
     setConsoleLogs(["// Console cleared"]);
     setGeneratedLink(null);
+    setAllocatedBank(null);
   };
 
   return (
@@ -520,6 +533,48 @@ export default function DemoStore() {
               Proceed to Checkout Portal
               <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </a>
+          </div>
+        )}
+
+        {/* Allocated Bank Details for Transfer Subscriptions */}
+        {allocatedBank && (
+          <div className="glass-card rounded-2xl p-5 border border-emerald-500/20 bg-emerald-500/5 animate-fade-in flex flex-col gap-4">
+            <div className="flex items-center gap-2 text-emerald-400">
+              <span className="material-symbols-outlined text-lg">account_balance</span>
+              <span className="text-xs font-semibold">Virtual Bank Account Allocated!</span>
+            </div>
+            
+            <p className="text-[10px] text-zinc-400 leading-normal">
+              Arafi has provisioned a dedicated static bank account for this subscription context. Transfer the payment amount below to activate subscription routing.
+            </p>
+
+            <div className="bg-[#050608] border border-white/5 rounded-xl p-4 flex flex-col gap-2.5 font-mono text-[11px]">
+              <div className="flex justify-between">
+                <span className="text-zinc-500">Bank Name</span>
+                <span className="text-white font-medium">{allocatedBank.bank}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-zinc-500">Account Number</span>
+                <span className="text-white font-bold select-all">{allocatedBank.account}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-zinc-500">Account Name</span>
+                <span className="text-white truncate max-w-[180px]">{allocatedBank.name}</span>
+              </div>
+              <div className="flex justify-between border-t border-white/5 pt-2 mt-1">
+                <span className="text-zinc-500">Amount Due</span>
+                <span className="text-emerald-400 font-bold">
+                  {(allocatedBank.amount).toLocaleString("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 })}
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-xl p-3 flex items-start gap-2.5 text-[10px] text-zinc-400 leading-normal">
+              <span className="material-symbols-outlined text-emerald-400 text-sm mt-0.5">sync</span>
+              <p>
+                Arafi is listening for Nomba transaction webhooks on this account. The ledger will be updated immediately upon credit.
+              </p>
+            </div>
           </div>
         )}
 
