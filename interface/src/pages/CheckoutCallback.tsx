@@ -16,13 +16,13 @@ const VERIFICATION_STEPS = [
 export default function CheckoutCallback() {
   const [searchParams] = useSearchParams();
   const orderReference = searchParams.get("orderReference") || searchParams.get("reference");
-  
+
   const [loading, setLoading] = useState(true);
   const [stepText, setStepText] = useState(VERIFICATION_STEPS[0]);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<PublicVerificationResponse | null>(null);
   const [redirectCountdown, setRedirectCountdown] = useState<number | null>(null);
-  
+
   const verificationAttempted = useRef(false);
   const stepIntervalRef = useRef<number | null>(null);
 
@@ -45,7 +45,7 @@ export default function CheckoutCallback() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const isProduct = searchParams.get("type") === "product";
       if (isProduct) {
         const response = await verifyPublicProductPayment(ref);
@@ -107,7 +107,7 @@ export default function CheckoutCallback() {
   // Handle redirect countdown
   useEffect(() => {
     if (redirectCountdown === null) return;
-    
+
     if (redirectCountdown <= 0) {
       if (result?.redirectUrl) {
         window.location.href = result.redirectUrl;
@@ -131,7 +131,7 @@ export default function CheckoutCallback() {
       <div className="absolute bottom-0 left-1/4 w-100 h-100 bg-tertiary/5 blur-[110px] -z-10 rounded-full pointer-events-none"></div>
 
       <div className="w-full max-w-md z-10">
-        
+
         {/* Verification Loading State */}
         {loading && (
           <div className="glass-card rounded-2xl p-8 border border-on-surface/10 text-center animate-fade-scale shadow-2xl flex flex-col items-center">
@@ -160,17 +160,17 @@ export default function CheckoutCallback() {
                 <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mb-6 animate-bounce-check">
                   <span className="material-symbols-outlined text-emerald-500 text-4xl">check_circle</span>
                 </div>
-                
+
                 <h2 className="font-headline-md text-xl font-bold text-on-surface mb-2">
                   Payment Confirmed!
                 </h2>
                 <p className="text-on-surface/60 text-sm mb-6">
-                  Successfully subscribed to <span className="font-semibold text-on-surface">{result.planName}</span>.
+                  Successfully paid to get <span className="font-semibold text-on-surface">{result.planName}</span>.
                 </p>
 
                 <div className="w-full bg-on-surface/5 h-1.5 rounded-full overflow-hidden mb-4">
-                  <div 
-                    className="bg-emerald-500 h-full transition-all duration-1000 ease-out" 
+                  <div
+                    className="bg-emerald-500 h-full transition-all duration-1000 ease-out"
                     style={{ width: `${((3 - redirectCountdown) / 3) * 100}%` }}
                   ></div>
                 </div>
@@ -184,7 +184,7 @@ export default function CheckoutCallback() {
               <div className="glass-card rounded-2xl border border-on-surface/10 overflow-hidden shadow-2xl relative">
                 {/* Visual Watermark */}
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
-                
+
                 {/* Header banner */}
                 <div className="bg-primary/10 border-b border-primary/20 px-6 py-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -235,7 +235,7 @@ export default function CheckoutCallback() {
                     </div>
                   </div>
 
-                  <button 
+                  <button
                     onClick={() => window.print()}
                     className="mt-8 w-full border border-on-surface/10 bg-on-surface/5 hover:bg-on-surface/10 hover:border-on-surface/20 text-on-surface rounded-xl py-3 text-sm font-semibold tracking-wide transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
