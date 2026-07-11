@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 import EnvironmentBadge from "../components/ui/EnvironmentBadge";
 import { useWorkspace } from "../store/useWorkspace";
 import { getProducts, createProduct, deleteProduct, createProductCheckout } from "../lib/api/products";
 import type { Product } from "../types";
+import ConfirmationModal from "../components/ui/ConfirmationModal";
 
 export default function Products() {
   const { activeWorkspace } = useWorkspace();
@@ -22,6 +23,11 @@ export default function Products() {
   const [prodPriceNGN, setProdPriceNGN] = useState("");
   const [prodDescription, setProdDescription] = useState("");
   const [creating, setCreating] = useState(false);
+  const [skuEdited, setSkuEdited] = useState(false);
+
+  // CSV Upload State
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingCsv, setUploadingCsv] = useState(false);
 
   // Checkout Link Generator State
   const [custEmail, setCustEmail] = useState("");
@@ -31,6 +37,7 @@ export default function Products() {
   const [generating, setGenerating] = useState(false);
   const [generatedLink, setGeneratedLink] = useState("");
   const [copied, setCopied] = useState(false);
+  const [confirmConfig, setConfirmConfig] = useState<any>(null);
 
   const fetchProductsList = async () => {
     setLoading(true);
@@ -69,6 +76,7 @@ export default function Products() {
       setProdSku("");
       setProdPriceNGN("");
       setProdDescription("");
+      setSkuEdited(false);
       setShowCreateModal(false);
       fetchProductsList();
     } catch (err: any) {
@@ -78,14 +86,105 @@ export default function Products() {
     }
   };
 
-  const handleDeleteProduct = async (productId: string) => {
-    if (!confirm("Are you sure you want to archive this product?")) return;
-    try {
-      await deleteProduct(productId);
-      fetchProductsList();
-    } catch (err: any) {
-      alert(err?.response?.data?.message || "Failed to delete product.");
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setProdName(val);
+    if (!skuEdited) {
+      if (!val) {
+        setProdSku("");
+      } else {
+        const prefix = val.split(' ').filter(Boolean).map(w => w.substring(0, 3).toUpperCase()).join('-');
+        setProdSku(`${prefix}-${Math.floor(1000 + Math.random() * 9000)}`);
+      }
     }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingCsv(true);
+    setError(null);
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const text = event.target?.result as string;
+        const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+        
+        // Assume CSV format: Name, SKU, PriceNGN, Description
+        const startIndex = lines[0].toLowerCase().includes('name') ? 1 : 0;
+        
+        const promises = [];
+        for (let i = startIndex; i < lines.length; i++) {
+          // Simple CSV split (doesn't handle quotes with commas inside, but good for MVP)
+          const [name, sku, price, ...descParts] = lines[i].split(',').map(s => s.trim());
+          const description = descParts.join(','); // re-join any commas in description
+
+          if (name && price) {
+            const priceKobo = Math.round(parseFloat(price) * 100);
+            const actualSku = sku || `PRD-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+            promises.push(createProduct({
+              name,
+              sku: actualSku,
+              priceKobo,
+              description: description || ''
+            }));
+          }
+        }
+        
+        await Promise.all(promises);
+        fetchProductsList();
+        setConfirmConfig({
+            isOpen: true,
+            isAlert: true,
+            title: "Success",
+            message: `Successfully imported ${promises.length} products!`,
+            type: "info",
+            confirmText: "OK",
+            onConfirm: () => setConfirmConfig(null)
+        });
+      } catch (err: any) {
+        setError("Failed to import products. Ensure CSV format is: Name, SKU, Price, Description");
+      } finally {
+        setUploadingCsv(false);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      }
+    };
+    reader.onerror = () => {
+      setError("Failed to read the file.");
+      setUploadingCsv(false);
+    };
+    reader.readAsText(file);
+  };
+
+  const handleDeleteProduct = async (productId: string) => {
+    setConfirmConfig({
+        isOpen: true,
+        title: "Archive Product",
+        message: "Are you sure you want to archive this product?",
+        type: "warning",
+        confirmText: "Archive",
+        onCancel: () => setConfirmConfig(null),
+        onConfirm: async () => {
+            setConfirmConfig((prev: any) => ({ ...prev, isProcessing: true }));
+            try {
+                await deleteProduct(productId);
+                fetchProductsList();
+                setConfirmConfig(null);
+            } catch (err: any) {
+                setConfirmConfig({
+                    isOpen: true,
+                    isAlert: true,
+                    title: "Error",
+                    message: err?.response?.data?.message || "Failed to delete product.",
+                    type: "danger",
+                    confirmText: "OK",
+                    onConfirm: () => setConfirmConfig(null)
+                });
+            }
+        }
+    });
   };
 
   const handleGenerateCheckout = async (e: React.FormEvent) => {
@@ -103,7 +202,15 @@ export default function Products() {
       });
       setGeneratedLink(res.checkoutUrl);
     } catch (err: any) {
-      alert(err?.response?.data?.message || "Failed to generate checkout link.");
+      setConfirmConfig({
+          isOpen: true,
+          isAlert: true,
+          title: "Error",
+          message: err?.response?.data?.message || "Failed to generate checkout link.",
+          type: "danger",
+          confirmText: "OK",
+          onConfirm: () => setConfirmConfig(null)
+      });
     } finally {
       setGenerating(false);
     }
@@ -143,12 +250,39 @@ export default function Products() {
           <h3 className="font-headline-md text-headline-md text-on-surface">
             Product Inventory
           </h3>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="border border-outline-variant text-on-surface font-label-mono text-label-mono px-3 py-1.5 rounded hover:bg-surface-variant transition-colors flex items-center gap-1.5"
-          >
-            <span className="material-symbols-outlined text-[16px]">add</span> Add Product
-          </button>
+          <div className="flex items-center gap-3">
+            <input 
+              type="file" 
+              accept=".csv" 
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingCsv}
+              className="text-on-surface-variant font-label-mono text-label-mono px-3 py-1.5 rounded hover:bg-surface-variant transition-colors flex items-center gap-1.5 disabled:opacity-50 border border-transparent"
+            >
+              <span className={`material-symbols-outlined text-[16px] ${uploadingCsv ? 'animate-spin-custom' : ''}`}>
+                {uploadingCsv ? "sync" : "upload"}
+              </span> 
+              {uploadingCsv ? "Uploading..." : "Import CSV"}
+            </button>
+            <button
+              onClick={() => {
+                setProdName("");
+                setProdSku("");
+                setProdPriceNGN("");
+                setProdDescription("");
+                setSkuEdited(false);
+                setShowCreateModal(false);
+                setShowCreateModal(true);
+              }}
+              className="bg-primary text-on-primary font-label-mono text-label-mono px-4 py-2 rounded-lg hover:brightness-110 transition-colors flex items-center gap-1.5 shadow-sm"
+            >
+              <span className="material-symbols-outlined text-[16px]">add</span> Add Product
+            </button>
+          </div>
         </div>
 
         <div className="overflow-x-auto min-h-[150px]">
@@ -248,7 +382,7 @@ export default function Products() {
                   required
                   placeholder="e.g. Premium Leather Jacket"
                   value={prodName}
-                  onChange={(e) => setProdName(e.target.value)}
+                  onChange={handleNameChange}
                   className="bg-surface/50 border border-on-surface/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary/50"
                 />
               </div>
@@ -260,7 +394,10 @@ export default function Products() {
                   required
                   placeholder="e.g. JKT-PREM-001"
                   value={prodSku}
-                  onChange={(e) => setProdSku(e.target.value)}
+                  onChange={(e) => {
+                    setProdSku(e.target.value);
+                    setSkuEdited(true);
+                  }}
                   className="bg-surface/50 border border-on-surface/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary/50 font-mono"
                 />
               </div>
@@ -424,6 +561,10 @@ export default function Products() {
             )}
           </div>
         </div>
+      )}
+
+      {confirmConfig && (
+        <ConfirmationModal {...confirmConfig} />
       )}
     </DashboardLayout>
   );

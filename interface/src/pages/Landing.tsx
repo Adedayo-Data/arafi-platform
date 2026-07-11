@@ -97,21 +97,21 @@ const Landing = () => {
             >
               <button
                 className="glow-button font-label-mono text-label-mono bg-inverse-primary text-on-primary px-8 py-4 rounded-DEFAULT transition-all duration-300 hover:scale-[1.02] border-t border-on-surface/20 flex items-center gap-2 shadow-2xl shadow-indigo-500/30"
-                onClick={() => navigate("/signup")}
+                onClick={() => window.open("https://demoapp-sandy-chi.vercel.app/", "_blank")}
               >
-                Start Building Free{" "}
+                View Live Demo{" "}
                 <span className="material-symbols-outlined text-[18px]">
-                  arrow_forward
+                  open_in_new
                 </span>
               </button>
               <button 
-                onClick={() => navigate("/docs")}
+                onClick={() => navigate("/signup")}
                 className="font-label-mono text-label-mono text-on-surface backdrop-blur-xl bg-on-surface/5 px-8 py-4 rounded-DEFAULT border border-on-surface/10 hover:border-on-surface/20 hover:bg-on-surface/10 transition-all flex items-center gap-2"
               >
+                Start Building
                 <span className="material-symbols-outlined text-[18px]">
-                  menu_book
-                </span>{" "}
-                Documentation
+                  arrow_forward
+                </span>
               </button>
             </div>
           </div>
@@ -157,6 +157,68 @@ const Landing = () => {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* Bento Box Features Section */}
+        <section className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop mb-40 fade-up">
+            <div className="text-center mb-16">
+                <h2 className="font-headline-lg text-headline-xl text-on-surface tracking-tight">
+                    Everything you need to scale.
+                </h2>
+                <p className="font-body-md text-body-lg text-on-surface/50 mt-4 max-w-2xl mx-auto">
+                    A unified platform handling the edge cases so you don't have to.
+                </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[280px]">
+                {/* Large Bento Item: Subscriptions */}
+                <div className="md:col-span-2 relative group rounded-3xl border border-on-surface/10 bg-surface-container-lowest overflow-hidden flex flex-col p-8 transition-transform hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/5">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-3xl rounded-full -mr-20 -mt-20 transition-opacity group-hover:bg-primary/20"></div>
+                    <div className="relative z-10 flex flex-col h-full">
+                        <span className="material-symbols-outlined text-[32px] text-primary mb-4">loop</span>
+                        <h3 className="font-headline-md text-2xl text-on-surface font-bold mb-2">Automated Subscriptions</h3>
+                        <p className="text-on-surface-variant font-body-md max-w-md">Set up recurring billing, grace periods, and automatic retries in 3 lines of code. We handle the webhooks and state transitions automatically.</p>
+                        <div className="mt-auto flex gap-2">
+                            <span className="px-3 py-1 rounded-full border border-outline-variant text-[11px] font-label-mono text-on-surface">Daily</span>
+                            <span className="px-3 py-1 rounded-full border border-outline-variant text-[11px] font-label-mono text-on-surface">Monthly</span>
+                            <span className="px-3 py-1 rounded-full border border-outline-variant text-[11px] font-label-mono text-on-surface">Yearly</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Small Bento Item: Virtual Accounts */}
+                <div className="relative group rounded-3xl border border-on-surface/10 bg-surface-container-lowest overflow-hidden flex flex-col p-8 transition-transform hover:-translate-y-1 hover:shadow-2xl hover:shadow-tertiary/5">
+                    <div className="absolute bottom-0 right-0 w-48 h-48 bg-tertiary/10 blur-2xl rounded-full -mr-10 -mb-10 transition-opacity group-hover:bg-tertiary/20"></div>
+                    <div className="relative z-10 flex flex-col h-full">
+                        <span className="material-symbols-outlined text-[32px] text-tertiary mb-4">account_balance</span>
+                        <h3 className="font-headline-md text-xl text-on-surface font-bold mb-2">Dedicated Virtual Accounts</h3>
+                        <p className="text-on-surface-variant font-body-sm">Provision unique bank accounts for every customer. Instantly receive transfers with zero reconciliation overhead.</p>
+                    </div>
+                </div>
+
+                {/* Small Bento Item: Coupons */}
+                <div className="relative group rounded-3xl border border-on-surface/10 bg-surface-container-lowest overflow-hidden flex flex-col p-8 transition-transform hover:-translate-y-1 hover:shadow-2xl hover:shadow-secondary/5">
+                    <div className="absolute top-0 left-0 w-48 h-48 bg-secondary/10 blur-2xl rounded-full -ml-10 -mt-10 transition-opacity group-hover:bg-secondary/20"></div>
+                    <div className="relative z-10 flex flex-col h-full">
+                        <span className="material-symbols-outlined text-[32px] text-secondary mb-4">loyalty</span>
+                        <h3 className="font-headline-md text-xl text-on-surface font-bold mb-2">Smart Promotions</h3>
+                        <p className="text-on-surface-variant font-body-sm">Create fixed-amount coupons programmatically to incentivize upgrades and reward loyal customers.</p>
+                    </div>
+                </div>
+
+                {/* Large Bento Item: Escrow */}
+                <div className="md:col-span-2 relative group rounded-3xl border border-on-surface/10 bg-surface-container-lowest overflow-hidden flex flex-col p-8 transition-transform hover:-translate-y-1 hover:shadow-2xl hover:shadow-error/5">
+                    <div className="absolute bottom-0 left-1/4 w-full h-32 bg-error/10 blur-3xl transition-opacity group-hover:bg-error/20"></div>
+                    <div className="relative z-10 flex flex-col h-full">
+                        <div className="flex items-center justify-between mb-4">
+                            <span className="material-symbols-outlined text-[32px] text-[#ff5f56]">handshake</span>
+                            <span className="px-3 py-1 rounded-full bg-error/10 text-error text-[10px] font-label-mono font-bold tracking-widest uppercase border border-error/20">Coming Soon</span>
+                        </div>
+                        <h3 className="font-headline-md text-2xl text-on-surface font-bold mb-2">Trustless Escrow</h3>
+                        <p className="text-on-surface-variant font-body-md max-w-md">Lock funds in secure digital vaults. Release payments only when milestones are met, building instant trust in two-sided marketplaces.</p>
+                    </div>
+                </div>
+            </div>
         </section>
 
         {/* How It Works Section - Integrated Flow */}

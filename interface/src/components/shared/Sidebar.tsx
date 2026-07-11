@@ -14,9 +14,7 @@ const Sidebar = () => {
     {
       title: "DEVELOPERS",
       items: [
-        { name: "API Keys", icon: "vpn_key", path: "/apikeys", isActive: currentPath === "/apikeys" },
         { name: "Webhooks", icon: "webhook", path: "/webhooks", isActive: currentPath === "/webhooks" },
-        { name: "Logs", icon: "list_alt", path: "/logs", isActive: currentPath === "/logs" },
         { name: "Team", icon: "group", path: "/team", isActive: currentPath === "/team" },
       ],
     },
@@ -27,18 +25,20 @@ const Sidebar = () => {
         { name: "History", icon: "history", path: "/payouts/history", isActive: currentPath === "/payouts/history" },
       ],
     },
-    {
-      title: "ESCROW",
-      items: [
-        { name: "Create", icon: "add_circle", path: "/escrow/create", isActive: currentPath === "/escrow/create" || currentPath === "/escrow" },
-        { name: "Transactions", icon: "receipt_long", path: "/escrow/transactions", isActive: currentPath === "/escrow/transactions" },
-      ],
-    },
+    // {
+    //   title: "ESCROW",
+    //   items: [
+    //     { name: "Create", icon: "add_circle", path: "/escrow/create", isActive: currentPath === "/escrow/create" || currentPath === "/escrow" },
+    //     { name: "Transactions", icon: "receipt_long", path: "/escrow/transactions", isActive: currentPath === "/escrow/transactions" },
+    //   ],
+    // },
     {
       title: "SUBSCRIPTION",
       items: [
         { name: "Plans", icon: "list_alt", path: "/plans", isActive: currentPath === "/plans" || currentPath === "/subscriptions" },
         { name: "Subscribers", icon: "people", path: "/subscribers", isActive: currentPath === "/subscribers" },
+        { name: "Customers", icon: "person", path: "/customers", isActive: currentPath === "/customers" },
+        { name: "Coupons", icon: "loyalty", path: "/coupons", isActive: currentPath === "/coupons" },
       ],
     },
     {
@@ -46,7 +46,7 @@ const Sidebar = () => {
       items: [
         { name: "Templates", icon: "mail", path: "/email", isActive: currentPath === "/email" },
       ],
-    },
+    }
   ];
 
   return (
@@ -139,8 +139,44 @@ const Sidebar = () => {
       </div>
 
       {/* Environment Toggle */}
-      <div className="pb-3 pt-2 mt-auto">
+      <div className="pt-2 mt-auto mb-2 border-b border-outline-variant pb-2">
         <EnvironmentToggle />
+      </div>
+
+      {/* Footer Links */}
+      <div className="pb-3 space-y-0.5">
+        <Link
+          to="/settings"
+          className={`flex items-center gap-2 px-1.5 py-0.5 rounded-lg active:scale-95 transition-all ${
+            currentPath === "/settings"
+              ? "bg-secondary-container text-on-secondary-container font-bold"
+              : "text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface transition-colors"
+          }`}
+        >
+          <span
+            className="material-symbols-outlined text-[16px]"
+            style={currentPath === "/settings" ? { fontVariationSettings: "'FILL' 1" } : {}}
+          >
+            settings
+          </span>
+          <span className="font-label-mono text-label-mono">Settings</span>
+        </Link>
+        <Link
+          to="/support"
+          className={`flex items-center gap-2 px-1.5 py-0.5 rounded-lg active:scale-95 transition-all ${
+            currentPath === "/support"
+              ? "bg-secondary-container text-on-secondary-container font-bold"
+              : "text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface transition-colors"
+          }`}
+        >
+          <span
+            className="material-symbols-outlined text-[16px]"
+            style={currentPath === "/support" ? { fontVariationSettings: "'FILL' 1" } : {}}
+          >
+            help
+          </span>
+          <span className="font-label-mono text-label-mono">Support</span>
+        </Link>
       </div>
     </nav>
   );

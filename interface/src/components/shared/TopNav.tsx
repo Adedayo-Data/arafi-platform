@@ -70,7 +70,7 @@ export default function TopNav() {
                   <span className="font-label-mono text-xs">Settings</span>
                 </Link>
                 <Link
-                  to="/docs"
+                  to="/dashboard/docs"
                   onClick={() => setDropdownOpen(false)}
                   className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors"
                 >

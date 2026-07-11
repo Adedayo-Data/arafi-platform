@@ -70,7 +70,9 @@ export interface CreateSubscriptionPayload {
 export interface Customer {
     id: string;
     email: string;
+    name?: string;
     external_ref: string;
+    card_id?: string;
     created_at: string;
 }
 
@@ -113,4 +115,37 @@ export interface CreateProductPayload {
     sku: string;
     priceKobo: number;
     description?: string;
+}
+
+// ─── Coupons ────────────────────────────────────────────────────────────────
+export interface Coupon {
+    id: string;
+    appId: string;
+    code: string;
+    discountAmountKobo: number;
+    active: boolean;
+    createdAt: string;
+}
+
+export interface CreateCouponPayload {
+    code: string;
+    discount_amount_kobo: number;
+}
+
+// ─── Payouts ────────────────────────────────────────────────────────────────
+export interface Payout {
+    id: string;
+    appId: string;
+    amount: number;
+    bankAccountNumber: string;
+    bankName: string;
+    status: string;
+    createdAt: string;
+}
+
+export interface CreatePayoutPayload {
+    amount: number;
+    bankAccountNumber: string;
+    bankCode: string;
+    bankName: string;
 }

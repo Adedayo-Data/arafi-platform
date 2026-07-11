@@ -1,13 +1,12 @@
 import { useState } from "react";
-import DashboardLayout from "../components/dashboard/DashboardLayout";
-import EndpointButton from "../components/ui/EndpointButton";
+import EndpointButton from "../ui/EndpointButton";
 
-export default function Logs() {
+export default function ApiExplorer() {
   const [activeEndpoint, setActiveEndpoint] = useState("/v1/transactions");
   const [showResponse, setShowResponse] = useState(false);
   const [animating, setAnimating] = useState(false);
 
-  const handleEndpointClick = (path: string) => {
+  const handleEndpointClick = (path: string) => { 
     setActiveEndpoint(path);
     setShowResponse(false);
     
@@ -22,9 +21,9 @@ export default function Logs() {
   };
 
   return (
-    <DashboardLayout fullHeight>
+    <div className="flex flex-col h-full bg-background rounded-b-3xl">
       {/* Header */}
-      <header className="h-16 border-b border-tech flex items-center px-6 justify-between bg-surface-container-lowest shrink-0 hidden md:flex">
+      <header className="h-16 border-b border-tech flex items-center px-6 justify-between bg-surface-container-lowest shrink-0 hidden md:flex rounded-t-3xl">
         <h2 className="font-headline-md text-headline-md text-on-surface">
           API Explorer
         </h2>
@@ -249,6 +248,6 @@ export default function Logs() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </div>
   );
 }

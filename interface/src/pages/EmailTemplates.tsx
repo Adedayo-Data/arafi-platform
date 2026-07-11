@@ -1,13 +1,28 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 import EnvironmentBadge from "../components/ui/EnvironmentBadge";
+import { getEmailTemplate,type EmailTemplateResponse } from "../lib/api/emails";
 
 export default function EmailTemplates() {
-  const mockTemplates = [
-    { id: "tpl_89fa", name: "Escrow Funds Secured", preset: "escrow_hold", updated_at: "2024-03-12T14:30:00Z" },
-    { id: "tpl_3bb2", name: "Invoice Receipt v2", preset: "sub_invoice", updated_at: "2024-02-28T09:15:00Z" },
-    { id: "tpl_1cf9", name: "Payout Cleared Alert", preset: "payment_cleared", updated_at: "2024-01-15T11:45:00Z" },
-  ];
+  const [template, setTemplate] = useState<EmailTemplateResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchTemplate() {
+      try {
+        const data = await getEmailTemplate();
+        if (data && (data.emailSubject || data.emailBodyTemplate)) {
+          setTemplate(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch template:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchTemplate();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -20,22 +35,22 @@ export default function EmailTemplates() {
             <EnvironmentBadge />
           </div>
           <p className="text-on-surface-variant">
-            Manage your saved transactional email templates.
+            Manage your transactional email configuration.
           </p>
         </div>
         <Link 
             to="/email/builder"
             className="bg-primary text-on-primary font-bold px-4 py-2 rounded-lg font-label-mono text-label-mono hover:brightness-110 transition-all active:scale-95 flex items-center gap-2 shrink-0"
         >
-          <span className="material-symbols-outlined text-[16px]">add</span>
-          Create Template
+          <span className="material-symbols-outlined text-[16px]">edit</span>
+          {template ? "Edit Template" : "Configure Template"}
         </Link>
       </header>
       
       <div className="surface-panel rounded-xl overflow-hidden animate-fade-up delay-60 border border-outline-variant/50">
         <div className="px-6 py-4 border-b border-outline-variant/30 bg-surface-container-low">
             <h3 className="font-headline-md text-headline-md text-on-surface">
-                Saved Templates
+                Active Configuration
             </h3>
         </div>
         
@@ -43,17 +58,14 @@ export default function EmailTemplates() {
             <table className="w-full text-left border-collapse">
                 <thead>
                     <tr className="border-b border-outline-variant bg-surface-container-high/30">
-                        <th className="px-6 py-3 font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider">
-                            Template ID
+                        <th className="px-6 py-3 font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider w-1/3">
+                            Template Type
                         </th>
                         <th className="px-6 py-3 font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider">
-                            Name
+                            Subject Line
                         </th>
-                        <th className="px-6 py-3 font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider">
-                            Blueprint Used
-                        </th>
-                        <th className="px-6 py-3 font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider">
-                            Last Updated
+                        <th className="px-6 py-3 font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider text-right">
+                            Status
                         </th>
                         <th className="px-6 py-3 font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider text-right">
                             Actions
@@ -61,21 +73,26 @@ export default function EmailTemplates() {
                     </tr>
                 </thead>
                 <tbody className="font-code-sm text-code-sm divide-y divide-outline-variant">
-                    {mockTemplates.map((tpl) => (
-                        <tr key={tpl.id} className="hover:bg-surface-container-highest/30 transition-colors">
-                            <td className="px-6 py-4 text-on-surface font-label-mono text-[12px]">
-                                {tpl.id}
+                    {isLoading ? (
+                        <tr>
+                            <td colSpan={4} className="px-6 py-8 text-center text-on-surface-variant animate-pulse">
+                                Loading configuration...
                             </td>
-                            <td className="px-6 py-4 text-on-surface font-body-md font-medium">
-                                {tpl.name}
-                            </td>
+                        </tr>
+                    ) : template ? (
+                        <tr className="hover:bg-surface-container-highest/30 transition-colors">
                             <td className="px-6 py-4">
-                                <span className="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] uppercase tracking-wider border border-outline-variant/50">
-                                    {tpl.preset}
+                                <span className="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] uppercase tracking-wider border border-outline-variant/50 font-label-mono">
+                                    Global Default
                                 </span>
                             </td>
-                            <td className="px-6 py-4 text-outline">
-                                {new Date(tpl.updated_at).toLocaleDateString()}
+                            <td className="px-6 py-4 text-on-surface font-body-md font-medium truncate max-w-[250px]">
+                                {template.emailSubject || "No subject defined"}
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] uppercase tracking-wider border border-emerald-500/20">
+                                    Active
+                                </span>
                             </td>
                             <td className="px-6 py-4 text-right">
                                 <Link 
@@ -86,7 +103,19 @@ export default function EmailTemplates() {
                                 </Link>
                             </td>
                         </tr>
-                    ))}
+                    ) : (
+                        <tr>
+                            <td colSpan={4} className="px-6 py-12 text-center">
+                                <div className="flex flex-col items-center gap-3">
+                                    <span className="material-symbols-outlined text-4xl text-on-surface-variant/50">mail</span>
+                                    <p className="text-on-surface-variant">No global email template configured yet.</p>
+                                    <Link to="/email/builder" className="text-primary font-label-mono text-xs hover:underline mt-2">
+                                        Configure now →
+                                    </Link>
+                                </div>
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
         </div>

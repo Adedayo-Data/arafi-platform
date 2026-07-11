@@ -24,3 +24,18 @@ export async function updateWebhookSettings(appId: string, body: UpdateWebhookPa
     const { data } = await api.put(`/v1/workspaces/${appId}/webhook`, body);
     return data;
 }
+
+export interface ApiKeys {
+    sandboxKey: string;
+    liveKey: string;
+}
+
+export async function getWorkspaceApiKeys(appId: string): Promise<ApiKeys> {
+    const { data } = await api.get(`/v1/workspaces/${appId}/api-keys`);
+    return data;
+}
+
+export async function regenerateWorkspaceApiKey(appId: string, mode: string): Promise<{ key: string }> {
+    const { data } = await api.post(`/v1/workspaces/${appId}/api-keys/regenerate?mode=${mode}`);
+    return data;
+}

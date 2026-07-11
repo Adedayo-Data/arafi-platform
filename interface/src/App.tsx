@@ -7,9 +7,8 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import EmptyDashboard from "./pages/EmptyDashboard";
 import Initialize from "./pages/Initialize";
-import Logs from "./pages/Logs";
-import ApiKeys from "./pages/ApiKeys";
 import ComingSoon from "./components/shared/ComingSoon";
+import ToastContainer from "./components/ui/ToastContainer";
 
 // New modules
 import Accounts from "./pages/Accounts";
@@ -19,12 +18,16 @@ import CreateEscrow from "./pages/CreateEscrow";
 import EscrowTransactions from "./pages/EscrowTransactions";
 import Plans from "./pages/Plans";
 import Subscribers from "./pages/Subscribers";
+import Customers from "./pages/Customers";
+import Coupons from "./pages/Coupons";
 import EmailTemplates from "./pages/EmailTemplates";
 import EmailTemplateBuilder from "./pages/EmailTemplateBuilder";
 import Webhooks from "./pages/Webhooks";
 import CheckoutCallback from "./pages/CheckoutCallback";
 import CheckoutPage from "./pages/CheckoutPage";
 import Docs from "./pages/Docs";
+import Settings from "./pages/Settings";
+import DashboardDocs from "./pages/DashboardDocs";
 
 import { useTheme } from "./store/useTheme";
 
@@ -59,6 +62,7 @@ function App() {
   }, [theme]);
   return (
       <Router>
+        <ToastContainer />
         <Routes>
            {/* Public routes */}
           <Route path="/" element={<Landing />} />
@@ -72,8 +76,6 @@ function App() {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/dashboard/empty" element={<ProtectedRoute><EmptyDashboard /></ProtectedRoute>} />
           <Route path="/initialize" element={<ProtectedRoute><Initialize /></ProtectedRoute>} />
-          <Route path="/logs" element={<ProtectedRoute><Logs /></ProtectedRoute>} />
-          <Route path="/apikeys" element={<ProtectedRoute><ApiKeys /></ProtectedRoute>} />
           <Route path="/accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute>} />
           <Route path="/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
           <Route path="/payouts/history" element={<ProtectedRoute><PayoutHistory /></ProtectedRoute>} />
@@ -81,12 +83,15 @@ function App() {
           <Route path="/escrow/transactions" element={<ProtectedRoute><EscrowTransactions /></ProtectedRoute>} />
           <Route path="/plans" element={<ProtectedRoute><Plans /></ProtectedRoute>} />
           <Route path="/subscribers" element={<ProtectedRoute><Subscribers /></ProtectedRoute>} />
+          <Route path="/customers" element={<ProtectedRoute><Customers /></ProtectedRoute>} />
+          <Route path="/coupons" element={<ProtectedRoute><Coupons /></ProtectedRoute>} />
           <Route path="/email" element={<ProtectedRoute><EmailTemplates /></ProtectedRoute>} />
           <Route path="/email/builder" element={<ProtectedRoute><EmailTemplateBuilder /></ProtectedRoute>} />
           <Route path="/webhooks" element={<ProtectedRoute><Webhooks /></ProtectedRoute>} />
+          <Route path="/dashboard/docs" element={<ProtectedRoute><DashboardDocs /></ProtectedRoute>} />
           
           <Route path="/team" element={<ProtectedRoute><ComingSoon moduleName="Team" /></ProtectedRoute>} />
-          <Route path="/settings" element={<ProtectedRoute><ComingSoon moduleName="Settings" /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/support" element={<ProtectedRoute><ComingSoon moduleName="Support" /></ProtectedRoute>} />
 
           {/* Fallback */}

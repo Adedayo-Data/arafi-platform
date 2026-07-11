@@ -48,6 +48,26 @@ export default function EmailTemplateBuilder() {
     }
   };
 
+  const handlePresetChange = (newPreset: string) => {
+    setPreset(newPreset);
+    if (newPreset === "escrow_hold") {
+        setSubject("Funds Secured for your transaction");
+        setTitle("Funds Secured.");
+        setBody("Hi {{customer_name}},\n\nYour payment of NGN {{amount}} is safely locked in Arafi escrow.\n\nThe funds will only be released to the seller once you approve the delivery of the goods.");
+        setCtaText("View Escrow Transaction");
+    } else if (newPreset === "sub_invoice") {
+        setSubject("Subscription Payment Successful");
+        setTitle("Payment Received.");
+        setBody("Hi {{customer_name}},\n\nYour subscription payment of NGN {{amount}} was successful.\n\nThank you for continuing to use our service. Your plan has been renewed automatically.");
+        setCtaText("Manage Subscription");
+    } else if (newPreset === "payment_cleared") {
+        setSubject("Payment Successful");
+        setTitle("Payment Cleared.");
+        setBody("Hi {{customer_name}},\n\nYour one-off payment of NGN {{amount}} has been processed successfully.\n\nThank you for your business. Your order is now confirmed.");
+        setCtaText("View Receipt");
+    }
+  };
+
   // Mock variables for preview
   const previewBody = body
     .replace(/\{\{customer_name\}\}/g, "Alice")
@@ -102,7 +122,7 @@ export default function EmailTemplateBuilder() {
                 </label>
                 <select
                     value={preset}
-                    onChange={(e) => setPreset(e.target.value)}
+                    onChange={(e) => handlePresetChange(e.target.value)}
                     className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none cursor-pointer"
                 >
                     <option value="escrow_hold">Escrow Hold Notification</option>
