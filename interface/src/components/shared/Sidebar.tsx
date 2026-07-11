@@ -58,7 +58,7 @@ const Sidebar = () => {
         </div>
         <div className="overflow-hidden">
           <h1 className="font-headline-md text-headline-md font-bold text-primary leading-none">
-            Arafi
+            Arafi<sup className="text-[9px] font-semibold text-primary ml-1 uppercase tracking-wider select-none">beta</sup>
           </h1>
           <p className="font-label-mono text-label-mono text-on-surface-variant text-[10px] truncate">
             {user?.email ?? "Developer Console"}

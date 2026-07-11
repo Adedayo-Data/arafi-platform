@@ -38,7 +38,9 @@ export default function Signup() {
           >
             <span className="flex items-center gap-2">
               <img src="/logo.svg" alt="logo" />
-              <p> Arafi</p>
+              <p>
+                Arafi<sup className="text-[9px] font-semibold text-primary ml-1 uppercase tracking-wider select-none">beta</sup>
+              </p>
             </span>
           </a>
           <h1 className="font-headline-xl text-headline-xl tracking-tight text-on-surface">

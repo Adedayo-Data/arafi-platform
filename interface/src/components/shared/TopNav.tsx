@@ -34,7 +34,7 @@ export default function TopNav() {
           <span className="material-symbols-outlined">menu</span>
         </button>
         <div className="font-headline-md text-headline-md font-bold text-primary">
-          Arafi
+          Arafi<sup className="text-[9px] font-semibold text-primary ml-1 uppercase tracking-wider select-none">beta</sup>
         </div>
       </div>
 
