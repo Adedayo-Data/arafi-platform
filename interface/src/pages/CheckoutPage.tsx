@@ -12,7 +12,8 @@ import {
   getPublicProductCheckoutDetails,
   verifyPublicProductPayment,
   simulateProductTransfer,
-  generatePublicProductCardCheckout
+  generatePublicProductCardCheckout,
+  provisionPublicProductBankTransfer
 } from "../lib/api/products";
 import BackgroundShader from "../components/ui/BackgroundShader";
 
@@ -170,7 +171,10 @@ export default function CheckoutPage() {
     try {
       setProcessingMethod(true);
       setError(null);
-      const res = await provisionPublicBankTransfer(subscriptionId);
+      const isProduct = new URLSearchParams(window.location.search).get("type") === "product";
+      const res = isProduct
+        ? await provisionPublicProductBankTransfer(subscriptionId)
+        : await provisionPublicBankTransfer(subscriptionId);
       setBankDetails(res);
     } catch (err: any) {
       console.error(err);
