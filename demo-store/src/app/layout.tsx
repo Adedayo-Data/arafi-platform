@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,7 +31,10 @@ export default function RootLayout({
       <head>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
       </head>
-      <body className="min-h-full flex flex-col bg-[#08090a] text-white selection:bg-purple-500/30 selection:text-purple-300">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#08090a] text-white selection:bg-purple-500/30 selection:text-purple-300">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
