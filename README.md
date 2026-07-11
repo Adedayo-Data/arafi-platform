@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="./interface/public/logo.svg" alt="Arafi Logo" width="120" />
+
 # Arafi
 
 ### Payment Logic as a Service
@@ -19,7 +21,7 @@ To access the Arafi Dashboard and test the application, log in with the followin
 * **Email**: `judge@nomba.com`
 * **Password**: `nomba2026`
 
-Use these credentials to log in at [https://arafi-platform.vercel.app/login](https://arafi-platform.vercel.app/login) (or your local dashboard instance).
+Use these credentials to log in at [https://arafi-platform.vercel.app/login](https://arafi-platform.vercel.app/login)
 
 ### 🏪 Interactive Demo Store Sandbox
 Test the developer integration live on our Demo Store:
