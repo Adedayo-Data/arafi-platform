@@ -155,7 +155,7 @@ export default function DemoStore() {
       const responseData = await res.json();
       logConsole(`Response 200 OK:\n${JSON.stringify(responseData, null, 2)}`);
       
-      setGeneratedLink(responseData.checkoutUrl);
+      setGeneratedLink(responseData.checkout_url || responseData.checkoutUrl);
     } catch (err: any) {
       logConsole(`Error generating product checkout: ${err.message}`);
     } finally {
@@ -226,7 +226,7 @@ export default function DemoStore() {
       const subData = await subRes.json();
       logConsole(`Response 200 OK (Subscription Created):\n${JSON.stringify(subData, null, 2)}`);
       
-      setGeneratedLink(subData.checkoutUrl);
+      setGeneratedLink(subData.checkout_url || subData.checkoutUrl);
     } catch (err: any) {
       logConsole(`Error generating subscription checkout: ${err.message}`);
     } finally {

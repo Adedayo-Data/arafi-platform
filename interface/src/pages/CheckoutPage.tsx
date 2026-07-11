@@ -11,7 +11,8 @@ import {
 import {
   getPublicProductCheckoutDetails,
   verifyPublicProductPayment,
-  simulateProductTransfer
+  simulateProductTransfer,
+  generatePublicProductCardCheckout
 } from "../lib/api/products";
 import BackgroundShader from "../components/ui/BackgroundShader";
 
@@ -143,7 +144,11 @@ export default function CheckoutPage() {
     try {
       setProcessingMethod(true);
       setError(null);
-      const res = await generatePublicCardCheckout(subscriptionId);
+      const isProduct = new URLSearchParams(window.location.search).get("type") === "product";
+      const res = isProduct
+        ? await generatePublicProductCardCheckout(subscriptionId)
+        : await generatePublicCardCheckout(subscriptionId);
+
       if (res.checkoutLink) {
         window.location.href = res.checkoutLink;
       } else {

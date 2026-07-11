@@ -45,3 +45,8 @@ export async function simulateProductTransfer(virtualAccountNumber: string, amou
     );
     return data;
 }
+
+export async function generatePublicProductCardCheckout(checkoutId: string): Promise<{ checkoutLink: string }> {
+    const { data } = await api.post(`/v1/products/public/checkout/${checkoutId}/card-checkout`);
+    return data;
+}
