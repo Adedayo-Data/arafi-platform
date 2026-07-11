@@ -95,8 +95,6 @@ export default function GuidedTour() {
       run={run}
       continuous
       scrollToFirstStep
-      showSkipButton
-      showProgress
       onEvent={handleEvent}
       options={{
         arrowColor: '#1e1e1e',
@@ -133,7 +131,7 @@ export default function GuidedTour() {
           marginTop: '16px',
           gap: '8px',
         },
-        buttonNext: {
+        buttonPrimary: {
           backgroundColor: '#c5b4e3',
           color: '#1a1a1a',
           fontFamily: '"JetBrains Mono", monospace',

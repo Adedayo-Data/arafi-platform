@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import DashboardLayout from "../components/dashboard/DashboardLayout";
-import EnvironmentBadge from "../components/ui/EnvironmentBadge";
+import PageHeader from "../components/ui/PageHeader";
 import ApiKeyDisplay from "../components/dashboard/ApiKeyDisplay";
 import StatCard from "../components/ui/StatCard";
 import { useWorkspace } from "../store/useWorkspace";
@@ -60,25 +60,18 @@ export default function Dashboard() {
   return (
     <DashboardLayout>
       {/* Header Row */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fade-up delay-0">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <h2 className="font-headline-xl text-headline-xl text-on-surface">
-              Platform Overview
-            </h2>
-            <EnvironmentBadge />
-          </div>
-          <p className="text-on-surface-variant">
-            A real-time snapshot of your workspace metrics and activity.
-          </p>
-        </div>
-
-        <ApiKeyDisplay
-          apiKey={apiKey}
-          maskedKey={maskedKey}
-        />
+      <div className="animate-fade-up delay-0 relative">
+        <PageHeader 
+          title="Platform Overview" 
+          description="A real-time snapshot of your workspace metrics and activity." 
+        >
+          <ApiKeyDisplay
+            apiKey={apiKey}
+            maskedKey={maskedKey}
+          />
+        </PageHeader>
         <div id="tour-api-keys" className="absolute top-0 right-0 w-64 h-16 pointer-events-none" />
-      </header>
+      </div>
 
       {/* Top Metrics Row */}
       <div id="tour-metrics" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter animate-fade-up delay-60 mt-6 relative">

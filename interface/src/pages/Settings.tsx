@@ -10,7 +10,7 @@ import { getWorkspaceApiKeys } from "../lib/api/workspaces";
 import type { ApiKeys } from "../lib/api/workspaces";
 import { useEnvironment } from "../store/useEnvironment";
 import { runSubscriptionRenewals, runSubscriptionWebhooks } from "../lib/api/subscriptions";
-import ConfirmationModal from "../components/ui/ConfirmationModal";
+import { useToast } from "../store/useToast";
 
 type SettingsTab = "general" | "api-keys" | "preferences" | "logs" | "developer";
 
@@ -34,7 +34,7 @@ export default function Settings() {
   const [workspaceName, setWorkspaceName] = useState(activeWorkspace?.app_name || "");
   const [isSaving, setIsSaving] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [confirmConfig, setConfirmConfig] = useState<any>(null);
+  const { addToast } = useToast();
 
   // API Keys state
   const [showGenerateModal, setShowGenerateModal] = useState(false);
@@ -308,91 +308,81 @@ export default function Settings() {
                     <p className="text-body-md text-on-surface-variant mt-1">Manually trigger background tasks and chron jobs.</p>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 flex flex-col justify-between">
-                        <div>
-                            <div className="flex items-center gap-2 mb-2">
-                                <span className="material-symbols-outlined text-primary text-[20px]">autorenew</span>
-                                <h4 className="font-bold text-on-surface">Run Subscription Renewals</h4>
-                            </div>
-                            <p className="text-sm text-on-surface-variant mb-6">Manually trigger the cron job that processes due subscription renewals across the platform.</p>
+                  <div className="bg-[#121212] border border-[#2b2b2b] rounded-xl overflow-hidden font-label-mono shadow-2xl">
+                    {/* Terminal Header */}
+                    <div className="bg-[#1a1a1a] border-b border-[#2b2b2b] px-4 py-2 flex items-center gap-2">
+                        <div className="flex gap-1.5">
+                            <div className="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+                            <div className="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+                            <div className="w-3 h-3 rounded-full bg-[#27c93f]"></div>
                         </div>
-                        <button
-                            onClick={async () => {
-                                setActionLoading('renewals');
-                                try {
-                                    const res = await runSubscriptionRenewals();
-                                    setConfirmConfig({
-                                        isOpen: true,
-                                        isAlert: true,
-                                        title: "Success",
-                                        message: res.message,
-                                        type: "info",
-                                        confirmText: "OK",
-                                        onConfirm: () => setConfirmConfig(null)
-                                    });
-                                } catch(e: any) {
-                                    setConfirmConfig({
-                                        isOpen: true,
-                                        isAlert: true,
-                                        title: "Error",
-                                        message: e?.response?.data?.message || 'Failed to run renewals',
-                                        type: "danger",
-                                        confirmText: "OK",
-                                        onConfirm: () => setConfirmConfig(null)
-                                    });
-                                } finally {
-                                    setActionLoading(null);
-                                }
-                            }}
-                            disabled={actionLoading !== null}
-                            className="bg-primary/10 text-primary hover:bg-primary hover:text-on-primary transition-colors font-label-mono text-xs py-2 rounded-lg font-bold flex justify-center"
-                        >
-                            {actionLoading === 'renewals' ? 'Running...' : 'Trigger Renewals'}
-                        </button>
+                        <div className="flex-1 text-center text-[10px] text-on-surface-variant font-bold tracking-widest uppercase">
+                            arafi-cli ~ /jobs
+                        </div>
                     </div>
-
-                    <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 flex flex-col justify-between">
-                        <div>
-                            <div className="flex items-center gap-2 mb-2">
-                                <span className="material-symbols-outlined text-tertiary text-[20px]">webhook</span>
-                                <h4 className="font-bold text-on-surface">Run Subscription Webhooks</h4>
+                    {/* Terminal Body */}
+                    <div className="p-6 flex flex-col gap-6 text-sm">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-3">
+                                <span className="text-[#27c93f]">➜</span>
+                                <span className="text-[#c5b4e3]">arafi</span>
+                                <span className="text-on-surface">trigger renewals</span>
                             </div>
-                            <p className="text-sm text-on-surface-variant mb-6">Manually trigger the cron job that dispatches pending webhooks to your configured endpoints.</p>
+                            <p className="text-[#a1a1aa] text-xs pl-6 mb-2">Executes the chron job to process due subscription renewals.</p>
+                            <button
+                                onClick={async () => {
+                                    setActionLoading('renewals');
+                                    try {
+                                        const res = await runSubscriptionRenewals();
+                                        addToast('success', res.message);
+                                    } catch(e: any) {
+                                        addToast('error', e?.response?.data?.message || 'Failed to run renewals');
+                                    } finally {
+                                        setActionLoading(null);
+                                    }
+                                }}
+                                disabled={actionLoading !== null}
+                                className="ml-6 self-start bg-[#2b2b2b] hover:bg-[#3f3f3f] border border-[#3f3f3f] text-on-surface transition-all px-4 py-1.5 rounded text-xs font-bold flex items-center gap-2 shadow-sm"
+                            >
+                                {actionLoading === 'renewals' ? (
+                                    <><span className="w-2 h-2 rounded-full bg-[#ffbd2e] animate-pulse"></span> Running...</>
+                                ) : (
+                                    <><span className="material-symbols-outlined text-[14px]">play_arrow</span> Execute Command</>
+                                )}
+                            </button>
                         </div>
-                        <button
-                            onClick={async () => {
-                                setActionLoading('webhooks');
-                                try {
-                                    const res = await runSubscriptionWebhooks();
-                                    setConfirmConfig({
-                                        isOpen: true,
-                                        isAlert: true,
-                                        title: "Success",
-                                        message: res.message,
-                                        type: "info",
-                                        confirmText: "OK",
-                                        onConfirm: () => setConfirmConfig(null)
-                                    });
-                                } catch(e: any) {
-                                    setConfirmConfig({
-                                        isOpen: true,
-                                        isAlert: true,
-                                        title: "Error",
-                                        message: e?.response?.data?.message || 'Failed to run webhooks',
-                                        type: "danger",
-                                        confirmText: "OK",
-                                        onConfirm: () => setConfirmConfig(null)
-                                    });
-                                } finally {
-                                    setActionLoading(null);
-                                }
-                            }}
-                            disabled={actionLoading !== null}
-                            className="bg-tertiary/10 text-tertiary hover:bg-tertiary hover:text-on-tertiary transition-colors font-label-mono text-xs py-2 rounded-lg font-bold flex justify-center"
-                        >
-                            {actionLoading === 'webhooks' ? 'Running...' : 'Trigger Webhooks'}
-                        </button>
+
+                        <div className="h-[1px] w-full bg-[#2b2b2b]"></div>
+
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-3">
+                                <span className="text-[#27c93f]">➜</span>
+                                <span className="text-[#c5b4e3]">arafi</span>
+                                <span className="text-on-surface">dispatch webhooks</span>
+                            </div>
+                            <p className="text-[#a1a1aa] text-xs pl-6 mb-2">Forces the dispatcher to send any pending webhooks to your endpoints.</p>
+                            <button
+                                onClick={async () => {
+                                    setActionLoading('webhooks');
+                                    try {
+                                        const res = await runSubscriptionWebhooks();
+                                        addToast('success', res.message);
+                                    } catch(e: any) {
+                                        addToast('error', e?.response?.data?.message || 'Failed to dispatch webhooks');
+                                    } finally {
+                                        setActionLoading(null);
+                                    }
+                                }}
+                                disabled={actionLoading !== null}
+                                className="ml-6 self-start bg-[#2b2b2b] hover:bg-[#3f3f3f] border border-[#3f3f3f] text-on-surface transition-all px-4 py-1.5 rounded text-xs font-bold flex items-center gap-2 shadow-sm"
+                            >
+                                {actionLoading === 'webhooks' ? (
+                                    <><span className="w-2 h-2 rounded-full bg-[#ffbd2e] animate-pulse"></span> Running...</>
+                                ) : (
+                                    <><span className="material-symbols-outlined text-[14px]">play_arrow</span> Execute Command</>
+                                )}
+                            </button>
+                        </div>
                     </div>
                   </div>
                 </section>
@@ -413,9 +403,6 @@ export default function Settings() {
         />
       )}
 
-      {confirmConfig && (
-        <ConfirmationModal {...confirmConfig} />
-      )}
     </DashboardLayout>
   );
 }

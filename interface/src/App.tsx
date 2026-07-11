@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import EmptyDashboard from "./pages/EmptyDashboard";
 import Initialize from "./pages/Initialize";
 import ComingSoon from "./components/shared/ComingSoon";
+import ToastContainer from "./components/ui/ToastContainer";
 
 // New modules
 import Accounts from "./pages/Accounts";
@@ -61,6 +62,7 @@ function App() {
   }, [theme]);
   return (
       <Router>
+        <ToastContainer />
         <Routes>
            {/* Public routes */}
           <Route path="/" element={<Landing />} />
