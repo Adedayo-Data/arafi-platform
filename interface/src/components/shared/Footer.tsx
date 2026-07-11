@@ -10,7 +10,7 @@ const Footer = () => {
             </span>
           </span>
           <p className="font-body-md text-on-surface/40">
-            © 2025 Arafi. All rights reserved.
+            © 2026 Arafi. All rights reserved.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-8">
