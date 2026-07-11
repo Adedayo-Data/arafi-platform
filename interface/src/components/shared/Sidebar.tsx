@@ -37,6 +37,8 @@ const Sidebar = () => {
       items: [
         { name: "Plans", icon: "list_alt", path: "/plans", isActive: currentPath === "/plans" || currentPath === "/subscriptions" },
         { name: "Subscribers", icon: "people", path: "/subscribers", isActive: currentPath === "/subscribers" },
+        { name: "Customers", icon: "person", path: "/customers", isActive: currentPath === "/customers" },
+        { name: "Coupons", icon: "loyalty", path: "/coupons", isActive: currentPath === "/coupons" },
       ],
     },
     {

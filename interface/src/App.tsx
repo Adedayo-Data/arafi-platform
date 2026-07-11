@@ -17,6 +17,8 @@ import CreateEscrow from "./pages/CreateEscrow";
 import EscrowTransactions from "./pages/EscrowTransactions";
 import Plans from "./pages/Plans";
 import Subscribers from "./pages/Subscribers";
+import Customers from "./pages/Customers";
+import Coupons from "./pages/Coupons";
 import EmailTemplates from "./pages/EmailTemplates";
 import EmailTemplateBuilder from "./pages/EmailTemplateBuilder";
 import Webhooks from "./pages/Webhooks";
@@ -79,6 +81,8 @@ function App() {
           <Route path="/escrow/transactions" element={<ProtectedRoute><EscrowTransactions /></ProtectedRoute>} />
           <Route path="/plans" element={<ProtectedRoute><Plans /></ProtectedRoute>} />
           <Route path="/subscribers" element={<ProtectedRoute><Subscribers /></ProtectedRoute>} />
+          <Route path="/customers" element={<ProtectedRoute><Customers /></ProtectedRoute>} />
+          <Route path="/coupons" element={<ProtectedRoute><Coupons /></ProtectedRoute>} />
           <Route path="/email" element={<ProtectedRoute><EmailTemplates /></ProtectedRoute>} />
           <Route path="/email/builder" element={<ProtectedRoute><EmailTemplateBuilder /></ProtectedRoute>} />
           <Route path="/webhooks" element={<ProtectedRoute><Webhooks /></ProtectedRoute>} />

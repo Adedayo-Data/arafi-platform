@@ -70,7 +70,9 @@ export interface CreateSubscriptionPayload {
 export interface Customer {
     id: string;
     email: string;
+    name?: string;
     external_ref: string;
+    card_id?: string;
     created_at: string;
 }
 

@@ -6,6 +6,7 @@ interface ApiKeyCardProps {
   status: "ACTIVE" | "TESTING";
   keyPrefix: string;
   maskedKey?: string;
+  fullKey?: string;
 }
 
 export default function ApiKeyCard({
@@ -14,11 +15,16 @@ export default function ApiKeyCard({
   status,
   keyPrefix,
   maskedKey = "••••••••••••••••••••••••",
+  fullKey
 }: ApiKeyCardProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    // navigator.clipboard.writeText(keyPrefix + maskedKey);
+    if (fullKey) {
+        navigator.clipboard.writeText(fullKey);
+    } else {
+        navigator.clipboard.writeText(keyPrefix + maskedKey);
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

@@ -6,12 +6,18 @@ import { useWorkspace } from "../store/useWorkspace";
 import ApiKeyCard from "../components/dashboard/ApiKeyCard";
 import GenerateKeyModal from "../components/ui/GenerateKeyModal";
 import ApiExplorer from "../components/shared/ApiExplorer";
+import { getWorkspaceApiKeys } from "../lib/api/workspaces";
+import type { ApiKeys } from "../lib/api/workspaces";
+import { useEnvironment } from "../store/useEnvironment";
+import { runSubscriptionRenewals, runSubscriptionWebhooks } from "../lib/api/subscriptions";
+import ConfirmationModal from "../components/ui/ConfirmationModal";
 
-type SettingsTab = "general" | "api-keys" | "preferences" | "logs";
+type SettingsTab = "general" | "api-keys" | "preferences" | "logs" | "developer";
 
 export default function Settings() {
   const { user } = useAuth();
   const { activeWorkspace } = useWorkspace();
+  const { isLiveMode } = useEnvironment();
   const location = useLocation();
   
   // Default to general tab, but allow passing a tab via state/hash if needed
@@ -27,14 +33,29 @@ export default function Settings() {
   // General state
   const [workspaceName, setWorkspaceName] = useState(activeWorkspace?.app_name || "");
   const [isSaving, setIsSaving] = useState(false);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [confirmConfig, setConfirmConfig] = useState<any>(null);
 
   // API Keys state
   const [showGenerateModal, setShowGenerateModal] = useState(false);
+  const [apiKeys, setApiKeys] = useState<ApiKeys | null>(null);
+
+  const fetchKeys = async () => {
+    if (activeWorkspace?.app_id) {
+      try {
+        const keys = await getWorkspaceApiKeys(activeWorkspace.app_id);
+        setApiKeys(keys);
+      } catch (e) {
+        console.error("Failed to fetch API keys");
+      }
+    }
+  };
 
   useEffect(() => {
     if (activeWorkspace?.app_name) {
       setWorkspaceName(activeWorkspace.app_name);
     }
+    fetchKeys();
   }, [activeWorkspace]);
 
   const handleSave = () => {
@@ -94,6 +115,17 @@ export default function Settings() {
             >
               <span className="material-symbols-outlined text-[20px]">list_alt</span>
               Developer Logs
+            </button>
+            <button
+              onClick={() => setActiveTab("developer")}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-label-mono ${
+                activeTab === "developer"
+                  ? "bg-primary text-on-primary font-bold shadow-md shadow-primary/20"
+                  : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"
+              }`}
+            >
+              <span className="material-symbols-outlined text-[20px]">terminal</span>
+              Developer Tools
             </button>
             <button
               onClick={() => setActiveTab("preferences")}
@@ -195,29 +227,48 @@ export default function Settings() {
                     </button>
                   </div>
 
-                  {/* Live Keys Section */}
-                  <div className="mb-8">
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                      <h4 className="font-headline-sm text-base text-on-surface font-bold">Live Keys</h4>
+                  {/* Conditionally render keys based on environment mode */}
+                  {apiKeys ? (
+                    isLiveMode ? (
+                      <div className="mb-8 animate-fade-in">
+                        <div className="flex items-center gap-2 mb-4">
+                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                          <h4 className="font-headline-sm text-base text-on-surface font-bold">Live Keys</h4>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <ApiKeyCard 
+                            title="Production API Key" 
+                            createdAt="Active" 
+                            status="ACTIVE" 
+                            keyPrefix="sk_live_" 
+                            maskedKey={apiKeys.liveKey ? `...${apiKeys.liveKey.slice(-8)}` : "••••••••"} 
+                            fullKey={apiKeys.liveKey}
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="animate-fade-in">
+                        <div className="flex items-center gap-2 mb-4">
+                          <span className="w-2.5 h-2.5 rounded-full bg-tertiary-container"></span>
+                          <h4 className="font-headline-sm text-base text-on-surface font-bold">Test Keys</h4>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <ApiKeyCard 
+                            title="Sandbox API Key" 
+                            createdAt="Active" 
+                            status="TESTING" 
+                            keyPrefix="sk_test_" 
+                            maskedKey={apiKeys.sandboxKey ? `...${apiKeys.sandboxKey.slice(-8)}` : "••••••••"} 
+                            fullKey={apiKeys.sandboxKey}
+                          />
+                        </div>
+                      </div>
+                    )
+                  ) : (
+                    <div className="py-8 text-center text-on-surface-variant font-mono text-xs animate-pulse">
+                      Loading API Keys...
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <ApiKeyCard title="Production Default" createdAt="Oct 24, 2023" status="ACTIVE" keyPrefix="sk_live_" />
-                      <ApiKeyCard title="Mobile App Auth" createdAt="Nov 12, 2023" status="ACTIVE" keyPrefix="sk_live_" />
-                    </div>
-                  </div>
-
-                  {/* Test Keys Section */}
-                  <div>
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="w-2.5 h-2.5 rounded-full bg-tertiary-container"></span>
-                      <h4 className="font-headline-sm text-base text-on-surface font-bold">Test Keys</h4>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <ApiKeyCard title="Staging Env Default" createdAt="Oct 24, 2023" status="TESTING" keyPrefix="sk_test_" />
-                      <ApiKeyCard title="Local Dev (Alice)" createdAt="Jan 05, 2024" status="TESTING" keyPrefix="sk_test_" />
-                    </div>
-                  </div>
+                  )}
                 </section>
               </div>
             )}
@@ -248,6 +299,106 @@ export default function Settings() {
               </div>
             )}
 
+            {/* ─── DEVELOPER TOOLS TAB ────────────────────────────── */}
+            {activeTab === "developer" && (
+              <div className="animate-fade-in flex flex-col gap-10">
+                <section>
+                  <div className="mb-6 border-b border-outline-variant pb-4">
+                    <h3 className="font-headline-sm text-headline-sm text-on-surface">Developer Tools</h3>
+                    <p className="text-body-md text-on-surface-variant mt-1">Manually trigger background tasks and chron jobs.</p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="material-symbols-outlined text-primary text-[20px]">autorenew</span>
+                                <h4 className="font-bold text-on-surface">Run Subscription Renewals</h4>
+                            </div>
+                            <p className="text-sm text-on-surface-variant mb-6">Manually trigger the cron job that processes due subscription renewals across the platform.</p>
+                        </div>
+                        <button
+                            onClick={async () => {
+                                setActionLoading('renewals');
+                                try {
+                                    const res = await runSubscriptionRenewals();
+                                    setConfirmConfig({
+                                        isOpen: true,
+                                        isAlert: true,
+                                        title: "Success",
+                                        message: res.message,
+                                        type: "info",
+                                        confirmText: "OK",
+                                        onConfirm: () => setConfirmConfig(null)
+                                    });
+                                } catch(e: any) {
+                                    setConfirmConfig({
+                                        isOpen: true,
+                                        isAlert: true,
+                                        title: "Error",
+                                        message: e?.response?.data?.message || 'Failed to run renewals',
+                                        type: "danger",
+                                        confirmText: "OK",
+                                        onConfirm: () => setConfirmConfig(null)
+                                    });
+                                } finally {
+                                    setActionLoading(null);
+                                }
+                            }}
+                            disabled={actionLoading !== null}
+                            className="bg-primary/10 text-primary hover:bg-primary hover:text-on-primary transition-colors font-label-mono text-xs py-2 rounded-lg font-bold flex justify-center"
+                        >
+                            {actionLoading === 'renewals' ? 'Running...' : 'Trigger Renewals'}
+                        </button>
+                    </div>
+
+                    <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="material-symbols-outlined text-tertiary text-[20px]">webhook</span>
+                                <h4 className="font-bold text-on-surface">Run Subscription Webhooks</h4>
+                            </div>
+                            <p className="text-sm text-on-surface-variant mb-6">Manually trigger the cron job that dispatches pending webhooks to your configured endpoints.</p>
+                        </div>
+                        <button
+                            onClick={async () => {
+                                setActionLoading('webhooks');
+                                try {
+                                    const res = await runSubscriptionWebhooks();
+                                    setConfirmConfig({
+                                        isOpen: true,
+                                        isAlert: true,
+                                        title: "Success",
+                                        message: res.message,
+                                        type: "info",
+                                        confirmText: "OK",
+                                        onConfirm: () => setConfirmConfig(null)
+                                    });
+                                } catch(e: any) {
+                                    setConfirmConfig({
+                                        isOpen: true,
+                                        isAlert: true,
+                                        title: "Error",
+                                        message: e?.response?.data?.message || 'Failed to run webhooks',
+                                        type: "danger",
+                                        confirmText: "OK",
+                                        onConfirm: () => setConfirmConfig(null)
+                                    });
+                                } finally {
+                                    setActionLoading(null);
+                                }
+                            }}
+                            disabled={actionLoading !== null}
+                            className="bg-tertiary/10 text-tertiary hover:bg-tertiary hover:text-on-tertiary transition-colors font-label-mono text-xs py-2 rounded-lg font-bold flex justify-center"
+                        >
+                            {actionLoading === 'webhooks' ? 'Running...' : 'Trigger Webhooks'}
+                        </button>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            )}
+
           </div>
         </div>
       </div>
@@ -255,8 +406,15 @@ export default function Settings() {
       {showGenerateModal && (
         <GenerateKeyModal
           onDismiss={() => setShowGenerateModal(false)}
-          onSuccess={() => setShowGenerateModal(false)}
+          onSuccess={() => {
+            setShowGenerateModal(false);
+            fetchKeys();
+          }}
         />
+      )}
+
+      {confirmConfig && (
+        <ConfirmationModal {...confirmConfig} />
       )}
     </DashboardLayout>
   );
